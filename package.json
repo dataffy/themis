@@ -1,0 +1,32 @@
+{
+  "name": "schema-validation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dataffy/schema-validation.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dataffy/schema-validation/issues"
+  },
+  "homepage": "https://github.com/dataffy/schema-validation#readme",
+  "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^18.7.14",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
+    "eslint-config-prettier": "^8.5.0",
+    "jest": "^28.0.8",
+    "prettier": "^2.7.1",
+    "ts-jest": "^28.0.8",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.2"
+  }
+}

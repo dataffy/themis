@@ -1,0 +1,14 @@
+import {Validator} from "@app/validators/validator";
+import {ValidateError} from "@app/errors";
+
+export class MinLengthValidator extends Validator<string> {
+  constructor(protected readonly minLength: number, protected readonly errorMessage?: string) {
+    super(errorMessage);
+  }
+
+  validate(value: string): void {
+    if (value.length < this.minLength) {
+      throw new ValidateError(`min length allowed is ${this.minLength}`);
+    }
+  }
+}

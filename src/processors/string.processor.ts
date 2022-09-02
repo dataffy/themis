@@ -1,0 +1,29 @@
+import {FieldConfig, FieldProcessor} from "@app/processors/field.processor";
+import {ValidateError} from "@app/errors";
+import {MaxLengthValidator, MinLengthValidator} from "@app/validators";
+
+
+export type StringFieldConfig = FieldConfig &
+  Partial<{
+    maxLength: number;
+    minLength: number;
+  }>;
+
+export class StringFieldProcessor extends FieldProcessor<StringFieldConfig, string, string> {
+  toInternalValue(data: string): string {
+    if (!(typeof data === "string")) {
+      throw new ValidateError("Not a valid string");
+    }
+
+    return data;
+  }
+
+  initialiseValidators(): void {
+    if (this.configuration.maxLength) {
+      this.validators.push(new MaxLengthValidator(this.configuration.maxLength));
+    }
+    if (this.configuration.minLength) {
+      this.validators.push(new MinLengthValidator(this.configuration.minLength));
+    }
+  }
+}
