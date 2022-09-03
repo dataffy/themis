@@ -1,6 +1,6 @@
-import {FieldConfig, FieldProcessor} from "@app/processors/field.processor";
-import {ValidateError} from "@app/errors";
-import {MaxValueValidator, MinValueValidator} from "@app/validators";
+import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
+import { ValidateError } from "@app/errors";
+import { MaxValueValidator, MinValueValidator } from "@app/validators";
 
 export type IntegerFieldConfig = FieldConfig &
   Partial<{
@@ -8,8 +8,12 @@ export type IntegerFieldConfig = FieldConfig &
     maxValue: number;
   }>;
 
-export class IntegerFieldProcessor extends FieldProcessor<IntegerFieldConfig, number, number> {
-  errorMessage = "Not a valid string";
+export class IntegerFieldProcessor extends FieldProcessor<
+  IntegerFieldConfig,
+  number,
+  number
+> {
+  errorMessage = "Not a valid integer number";
 
   toInternalValue(data: number): number {
     if (!(typeof data === "number") || !Number.isInteger(data)) {

@@ -1,9 +1,13 @@
-import {FieldConfig, FieldProcessor} from "@app/processors/field.processor";
-import {ValidateError} from "@app/errors";
+import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
+import { ValidateError } from "@app/errors";
 
 export type BooleanFieldConfig = FieldConfig;
 
-export class BooleanFieldProcessor extends FieldProcessor<BooleanFieldConfig, string | boolean | number, boolean> {
+export class BooleanFieldProcessor extends FieldProcessor<
+  BooleanFieldConfig,
+  string | boolean | number,
+  boolean
+> {
   trueValues = [true, "true", "TRUE", "1", 1];
   falseValue = [false, "false", "FALSE", "0", 0];
 

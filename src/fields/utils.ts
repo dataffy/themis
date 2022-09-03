@@ -1,6 +1,10 @@
-import {ValidatorFieldsMetadataStorage} from "@app/schema/storage";
-import {FieldConfig, FieldProcessor, ProcessorClass} from "@app/processors/field.processor";
-import {NestedFieldConfiguration} from "@app/fields";
+import { ValidatorFieldsMetadataStorage } from "@app/schema/storage";
+import {
+  FieldConfig,
+  FieldProcessor,
+  ProcessorClass,
+} from "@app/processors/field.processor";
+import { NestedFieldConfiguration } from "@app/fields";
 
 // export type Constructable<T, O extends Options = Options> = new (obj: T, options: O) => ValidatorClass<T>;
 
@@ -15,13 +19,13 @@ export const registerNestedValidatorField = (
   validatorClass: object,
   validatorName: string,
   propertyKey: string,
-  configuration: NestedFieldConfiguration<any>,
+  configuration: NestedFieldConfiguration<any>
 ): void => {
   ValidatorFieldsMetadataStorage.storage.addClassNestedValidatorDefinition(
     validatorClass.constructor.name,
     validatorName,
     propertyKey,
-    configuration,
+    configuration
   );
 };
 
@@ -40,16 +44,19 @@ export const registerNestedValidatorField = (
  *  (value: string | string[]): boolean => {...}
  * )
  */
-export const registerField = <C extends FieldConfig, T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>>(
+export const registerField = <
+  C extends FieldConfig,
+  T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
+>(
   validatorClass: object,
   propertyKey: string,
   configuration: C,
-  processorClass: T,
+  processorClass: T
 ): void => {
   ValidatorFieldsMetadataStorage.storage.addClassValidatorDefinition(
     validatorClass.constructor.name,
     propertyKey,
     configuration,
-    processorClass,
+    processorClass
   );
 };

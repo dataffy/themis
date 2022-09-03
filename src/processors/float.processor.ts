@@ -1,6 +1,6 @@
-import {FieldConfig, FieldProcessor} from "@app/processors/field.processor";
-import {ValidateError} from "@app/errors";
-import {MaxValueValidator, MinValueValidator} from "@app/validators";
+import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
+import { ValidateError } from "@app/errors";
+import { MaxValueValidator, MinValueValidator } from "@app/validators";
 
 export type FloatFieldConfig = FieldConfig &
   Partial<{
@@ -8,11 +8,15 @@ export type FloatFieldConfig = FieldConfig &
     maxValue: number;
   }>;
 
-export class FloatFieldProcessor extends FieldProcessor<FloatFieldConfig, number, number> {
-  errorMessage = "Not a valid string";
+export class FloatFieldProcessor extends FieldProcessor<
+  FloatFieldConfig,
+  number,
+  number
+> {
+  errorMessage = "Not a valid float number";
 
   toInternalValue(data: number): number {
-    if (!(typeof data === "number") || !(Number.isInteger(data) && Number.isFinite(data))) {
+    if (!(typeof data === "number")) {
       throw new ValidateError(this.errorMessage);
     }
 

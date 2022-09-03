@@ -1,8 +1,14 @@
-import {Validator} from "@app/validators/validator";
-import {ValidateError} from "@app/errors";
+import { Validator } from "@app/validators/validator";
+import { ValidateError } from "@app/errors";
 
 export type FieldConfig = Partial<{
+  /**
+   * Specifies if the field is nullable. Default value is true
+   */
   nullable: boolean;
+  /**
+   * Specifies if the field is required. Default value is true
+   */
   required: boolean;
 }>;
 
@@ -10,7 +16,7 @@ export type ProcessorClass<
   T extends FieldProcessor<C, U, K>,
   C extends FieldConfig = FieldConfig,
   U = unknown,
-  K = unknown,
+  K = unknown
 > = new (configuration: C) => T;
 
 export abstract class FieldProcessor<T extends FieldConfig, U, K> {
@@ -27,7 +33,7 @@ export abstract class FieldProcessor<T extends FieldConfig, U, K> {
   abstract toInternalValue(data: U): K;
 
   /**
-   * Used to initialise the validators based on the field options
+   * Used to initialise the validators based on the field configuration
    */
   abstract initialiseValidators(): void;
 
@@ -49,6 +55,12 @@ export abstract class FieldProcessor<T extends FieldConfig, U, K> {
     return value;
   }
 
+  /**
+   * Runs all the validators configured on the field and throws an error containing all the
+   * validation errors
+   * @param data
+   * @private
+   */
   private runValidators(data: K): void {
     const errors: string[] = [];
 
