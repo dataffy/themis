@@ -1,16 +1,18 @@
-import {FieldConfig} from "@app/processors/field.processor";
+import { FieldConfig } from "@app/processors/field.processor";
 import {
   BooleanFieldConfig,
-  BooleanFieldProcessor, FloatFieldConfig,
+  BooleanFieldProcessor,
+  FloatFieldConfig,
   FloatFieldProcessor,
-  IntegerFieldConfig, IntegerFieldProcessor,
+  IntegerFieldConfig,
+  IntegerFieldProcessor,
   StringFieldConfig,
-  StringFieldProcessor
+  StringFieldProcessor,
 } from "@app/processors";
-import {registerField, registerNestedValidatorField} from "@app/fields/utils";
+import { registerField, registerNestedValidatorField } from "@app/fields/utils";
 
 export type ValidationField<T extends FieldConfig> = (
-  configuration?: T,
+  configuration?: T
 ) => (target: object, propertyKey: string) => void;
 
 /**
@@ -25,9 +27,9 @@ export type ValidationField<T extends FieldConfig> = (
  */
 export const StringField: ValidationField<StringFieldConfig> =
   (configuration?: StringFieldConfig) =>
-    (target: object, propertyKey: string): void => {
-      registerField(target, propertyKey, configuration, StringFieldProcessor);
-    };
+  (target: object, propertyKey: string): void => {
+    registerField(target, propertyKey, configuration, StringFieldProcessor);
+  };
 
 /**
  * Used to register the class property as an integer field
@@ -41,9 +43,9 @@ export const StringField: ValidationField<StringFieldConfig> =
  */
 export const IntegerField: ValidationField<IntegerFieldConfig> =
   (configuration?: IntegerFieldConfig) =>
-    (target: object, propertyKey: string): void => {
-      registerField(target, propertyKey, configuration, IntegerFieldProcessor);
-    };
+  (target: object, propertyKey: string): void => {
+    registerField(target, propertyKey, configuration, IntegerFieldProcessor);
+  };
 
 /**
  * Used to register the class property as a boolean field
@@ -57,9 +59,9 @@ export const IntegerField: ValidationField<IntegerFieldConfig> =
  */
 export const BooleanField: ValidationField<BooleanFieldConfig> =
   (configuration?: BooleanFieldConfig) =>
-    (target: object, propertyKey: string): void => {
-      registerField(target, propertyKey, configuration, BooleanFieldProcessor);
-    };
+  (target: object, propertyKey: string): void => {
+    registerField(target, propertyKey, configuration, BooleanFieldProcessor);
+  };
 
 /**
  * Used to register the class property as a boolean field
@@ -73,9 +75,9 @@ export const BooleanField: ValidationField<BooleanFieldConfig> =
  */
 export const FloatField: ValidationField<FloatFieldConfig> =
   (configuration?: FloatFieldConfig) =>
-    (target: object, propertyKey: string): void => {
-      registerField(target, propertyKey, configuration, FloatFieldProcessor);
-    };
+  (target: object, propertyKey: string): void => {
+    registerField(target, propertyKey, configuration, FloatFieldProcessor);
+  };
 
 export type NestedFieldConfiguration<T> = {
   validator: any; //TODO: Update type
@@ -88,6 +90,11 @@ export type NestedFieldConfiguration<T> = {
  */
 export const NestedField =
   <T>(configuration: NestedFieldConfiguration<T>) =>
-    (target: object, propertyKey: string): void => {
-      registerNestedValidatorField(target, "NestedField", propertyKey, configuration);
-    };
+  (target: object, propertyKey: string): void => {
+    registerNestedValidatorField(
+      target,
+      "NestedField",
+      propertyKey,
+      configuration
+    );
+  };

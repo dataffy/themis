@@ -1,11 +1,19 @@
-import {FieldConfig, FieldProcessor, ProcessorClass} from "@app/processors/field.processor";
-import {NestedFieldConfiguration} from "@app/fields";
+import {
+  FieldConfig,
+  FieldProcessor,
+  ProcessorClass,
+} from "@app/processors/field.processor";
+import { NestedFieldConfiguration } from "@app/fields";
 
-export type ValidatorConfiguration<T extends FieldProcessor<FieldConfig, unknown, unknown>> = {
+export type ValidatorConfiguration<
+  T extends FieldProcessor<FieldConfig, unknown, unknown>
+> = {
   processor: T;
 };
 
-export type ValidatorClassConfiguration<T extends FieldProcessor<FieldConfig, unknown, unknown>> = {
+export type ValidatorClassConfiguration<
+  T extends FieldProcessor<FieldConfig, unknown, unknown>
+> = {
   registered: boolean;
   properties: { [propertyKey: string]: ValidatorConfiguration<T> };
   nestedValidators: { [propertyKey: string]: any }; //TODO: Update nestedValidators type
@@ -13,8 +21,11 @@ export type ValidatorClassConfiguration<T extends FieldProcessor<FieldConfig, un
 
 export class ValidatorFieldsMetadataStorage {
   private static instance: ValidatorFieldsMetadataStorage;
-  protected validatorsClasses: { [validatorClassName: string]: ValidatorClassConfiguration<FieldProcessor<FieldConfig, unknown, unknown>> } =
-    {};
+  protected validatorsClasses: {
+    [validatorClassName: string]: ValidatorClassConfiguration<
+      FieldProcessor<FieldConfig, unknown, unknown>
+    >;
+  } = {};
 
   private constructor() {}
 
@@ -48,11 +59,14 @@ export class ValidatorFieldsMetadataStorage {
    * @param processorClass - The class used for processing the proeperty
    *
    */
-  addClassValidatorDefinition<C extends FieldConfig, T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>>(
+  addClassValidatorDefinition<
+    C extends FieldConfig,
+    T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
+  >(
     validatorClassName: string,
     propertyKey: string,
     configuration: C,
-    processorClass: T,
+    processorClass: T
   ): void {
     if (!this.validatorsClasses[validatorClassName]) {
       this.validatorsClasses[validatorClassName] = {
@@ -80,7 +94,7 @@ export class ValidatorFieldsMetadataStorage {
     validatorClassName: string,
     validatorName: string,
     propertyKey: string,
-    configuration: NestedFieldConfiguration<any>,
+    configuration: NestedFieldConfiguration<any>
   ): void {
     if (!this.validatorsClasses[validatorClassName]) {
       this.validatorsClasses[validatorClassName] = {
@@ -90,7 +104,8 @@ export class ValidatorFieldsMetadataStorage {
       };
     }
 
-    this.validatorsClasses[validatorClassName].nestedValidators[propertyKey] = configuration.validator;
+    this.validatorsClasses[validatorClassName].nestedValidators[propertyKey] =
+      configuration.validator;
   }
 
   removeValidatorClass(validatorClassName: string): void {
@@ -103,7 +118,7 @@ export class ValidatorFieldsMetadataStorage {
    * @param validatorClass
    */
   getValidatorClassMetadata(
-    validatorClass: string,
+    validatorClass: string
   ): ValidatorClassConfiguration<FieldProcessor<unknown, unknown, unknown>> {
     return this.validatorsClasses[validatorClass];
   }

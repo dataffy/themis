@@ -8,7 +8,9 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   testMatch: ["**/tests/**/*.test.ts"],
-  moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, { prefix: "<rootDir>/" }),
+  moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
+    prefix: "<rootDir>/",
+  }),
   coveragePathIgnorePatterns: ["./node_modules", "./tests"],
   collectCoverage: true,
   reporters: ["default"],

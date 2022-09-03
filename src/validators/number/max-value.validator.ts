@@ -1,8 +1,11 @@
-import {Validator} from "@app/validators/validator";
-import {ValidateError} from "@app/errors";
+import { Validator } from "@app/validators/validator";
+import { ValidateError } from "@app/errors";
 
 export class MaxValueValidator extends Validator<number> {
-  constructor(protected readonly maxValue: number, protected readonly errorMessage?: string) {
+  constructor(
+    protected readonly maxValue: number,
+    protected readonly errorMessage?: string
+  ) {
     super(errorMessage);
   }
 
