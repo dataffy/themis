@@ -1,5 +1,5 @@
 import { Validator } from "@app/validators/validator";
-import { ValidateError } from "@app/errors";
+import { ProcessorValidateError, ValidateError } from "@app/errors";
 
 export type FieldConfig = Partial<{
   /**
@@ -28,6 +28,7 @@ export abstract class FieldProcessor<T extends FieldConfig, U, K> {
 
   /**
    * Transforms the incoming data into the value used internally
+   * @abstract
    * @param data
    */
   abstract toInternalValue(data: U): K;
@@ -37,10 +38,6 @@ export abstract class FieldProcessor<T extends FieldConfig, U, K> {
    */
   abstract initialiseValidators(): void;
 
-  /**
-   *
-   * @param data
-   */
   validate(data: U): K {
     const isEmpty = this.checkEmptyValues(data);
 
@@ -73,8 +70,7 @@ export abstract class FieldProcessor<T extends FieldConfig, U, K> {
     });
 
     if (errors.length !== 0) {
-      // TODO: modify thrown error
-      throw new ValidateError(errors.toString());
+      throw new ProcessorValidateError(errors);
     }
   }
 

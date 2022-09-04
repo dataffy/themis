@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
-import {IntegerFieldProcessor} from "@app/processors";
-import {MaxValueValidator, MinValueValidator} from "@app/validators";
+import { IntegerFieldProcessor } from "@app/processors";
+import { MaxValueValidator, MinValueValidator } from "@app/validators/number";
+import { Validator } from "@app/validators/validator";
 
 describe("IntegerProcessor", () => {
   describe("toInternalValue method", () => {
@@ -22,14 +23,14 @@ describe("IntegerProcessor", () => {
       },
       {
         testName: "throw error when value is a float number",
-        value: faker.datatype.number({precision: 0.1}) + 0.01,
+        value: faker.datatype.number({ precision: 0.1 }) + 0.01,
         expectedError: true,
       },
       {
         testName: "return the integer number when value is integer",
         value: faker.datatype.number(),
         expectedError: false,
-      }
+      },
     ])("Should $testName", ({ value, expectedError }) => {
       const processor = new IntegerFieldProcessor({});
 
@@ -69,13 +70,19 @@ describe("IntegerProcessor", () => {
         config: { minValue, maxValue },
         expectedValidators: [
           new MinValueValidator(minValue),
-          new MaxValueValidator(maxValue)
+          new MaxValueValidator(maxValue),
         ],
       },
     ])("Should $testName", ({ config, expectedValidators }) => {
       const processor = new IntegerFieldProcessor(config);
 
-      expect((processor as any).validators).toMatchObject(expectedValidators);
+      expect(
+        (
+          processor as IntegerFieldProcessor & {
+            validators: Validator<unknown>[];
+          }
+        ).validators
+      ).toMatchObject(expectedValidators);
     });
   });
 });

@@ -1,6 +1,6 @@
 import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
 import { ValidateError } from "@app/errors";
-import { MaxValueValidator, MinValueValidator } from "@app/validators";
+import { MaxValueValidator, MinValueValidator } from "@app/validators/number";
 
 export type IntegerFieldConfig = FieldConfig &
   Partial<{

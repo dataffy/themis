@@ -1,4 +1,4 @@
-import { MinValueValidator } from "@app/validators";
+import { MinValueValidator } from "@app/validators/number";
 import { faker } from "@faker-js/faker";
 import { ValidateError } from "@app/errors";
 

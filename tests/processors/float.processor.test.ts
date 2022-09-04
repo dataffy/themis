@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
-import {FloatFieldProcessor} from "@app/processors";
-import {MaxValueValidator, MinValueValidator} from "@app/validators";
+import { FloatFieldProcessor } from "@app/processors";
+import { MaxValueValidator, MinValueValidator } from "@app/validators/number";
+import { Validator } from "@app/validators/validator";
 
 describe("FloatProcessor", () => {
   describe("toInternalValue method", () => {
@@ -27,12 +28,12 @@ describe("FloatProcessor", () => {
       },
       {
         testName: "return the float number when the value is float",
-        value: faker.datatype.number({precision: 0.1}),
+        value: faker.datatype.number({ precision: 0.1 }),
         expectedError: false,
       },
       {
         testName: "return the float number when the value is float",
-        value: 1.00,
+        value: 1.0,
         expectedError: false,
       },
     ])("Should $testName", ({ value, expectedError }) => {
@@ -74,13 +75,19 @@ describe("FloatProcessor", () => {
         config: { minValue, maxValue },
         expectedValidators: [
           new MinValueValidator(minValue),
-          new MaxValueValidator(maxValue)
+          new MaxValueValidator(maxValue),
         ],
       },
     ])("Should $testName", ({ config, expectedValidators }) => {
       const processor = new FloatFieldProcessor(config);
 
-      expect((processor as any).validators).toMatchObject(expectedValidators);
+      expect(
+        (
+          processor as FloatFieldProcessor & {
+            validators: Validator<unknown>[];
+          }
+        ).validators
+      ).toMatchObject(expectedValidators);
     });
   });
 });

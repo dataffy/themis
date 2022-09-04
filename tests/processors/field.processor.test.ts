@@ -1,7 +1,7 @@
 import { FieldConfig, FieldProcessor } from "@app/processors";
 import { faker } from "@faker-js/faker";
 import { Validator } from "@app/validators/validator";
-import { ValidateError } from "@app/errors";
+import { ProcessorValidateError, ValidateError } from "@app/errors";
 
 describe("FieldProcessor", () => {
   describe("validate method", () => {
@@ -64,12 +64,12 @@ describe("FieldProcessor", () => {
     it.each([
       {
         name: "another string",
-        valueFn: (value: string | number) => "Another string",
+        valueFn: (): string => "Another string",
         value: "String",
       },
       {
         name: "string from number",
-        valueFn: (value: string | number) => value.toString(),
+        valueFn: (value: string | number): string => value.toString(),
         value: faker.datatype.number(),
       },
     ])(
@@ -98,20 +98,20 @@ describe("FieldProcessor", () => {
 
     it.each([
       {
-        testName: "not throw error when validation passed successfully",
+        testName: "throw error when validation passed successfully",
         expectValidationError: "Validation error",
       },
       {
-        testName: "throw error when validation passed successfully",
+        testName: "not throw error when validation passed successfully",
         expectValidationError: false,
       },
-    ])("Should", ({ expectValidationError }) => {
+    ])("Should $testName", ({ expectValidationError }) => {
       class DummyValidator extends Validator<string> {
         constructor() {
           super();
         }
 
-        validate(value: string): void {}
+        validate(): void {}
       }
 
       class DummyFieldProcessor extends FieldProcessor<
@@ -139,9 +139,16 @@ describe("FieldProcessor", () => {
       const value = faker.datatype.string();
 
       if (expectValidationError) {
-        expect(() => processor.validate(value)).toThrowError(
-          expectValidationError as string
-        );
+        try {
+          processor.validate(value);
+          expect(true).toEqual(false);
+        } catch (error) {
+          expect(error).toBeInstanceOf(ProcessorValidateError);
+          expect((error as ProcessorValidateError).messages.length).toEqual(1);
+          expect((error as ProcessorValidateError).messages[0]).toEqual(
+            expectValidationError
+          );
+        }
       } else {
         const validationResult = processor.validate(value);
         expect(validationResult).toEqual(value);
