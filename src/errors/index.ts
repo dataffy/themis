@@ -1,2 +1,3 @@
-export * from "./schema-validation.error";
+export * from "./validation.error";
+export * from "./processor-validate.error";
 export * from "./validate.error";

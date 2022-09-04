@@ -1,4 +1,4 @@
-import { MaxValueValidator } from "@app/validators";
+import { MaxValueValidator } from "@app/validators/number";
 import { faker } from "@faker-js/faker";
 import { ValidateError } from "@app/errors";
 

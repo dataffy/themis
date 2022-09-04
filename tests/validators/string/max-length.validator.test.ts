@@ -1,4 +1,4 @@
-import { MaxLengthValidator } from "@app/validators";
+import { MaxLengthValidator } from "@app/validators/string";
 import { faker } from "@faker-js/faker";
 import { ValidateError } from "@app/errors";
 

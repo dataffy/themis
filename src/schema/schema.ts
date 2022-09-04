@@ -3,6 +3,7 @@ import {
   ValidatorFieldsMetadataStorage,
 } from "@app/schema/storage";
 import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
+import { ValidationError } from "@app/errors/validation.error";
 
 export type ValidatorClass<
   T extends Schema<U>,
@@ -115,8 +116,7 @@ export class Schema<T, Context = unknown> {
     const validationErrors: ValidationErrors = this.validateFields();
 
     if (Object.keys(validationErrors).length !== 0) {
-      //TODO: Throw error
-      // throw new ValidationError(DataValidationError.code, DataValidationError.message, validationErrors);
+      throw new ValidationError(validationErrors);
     }
 
     Object.assign(this, this.validatedFields);

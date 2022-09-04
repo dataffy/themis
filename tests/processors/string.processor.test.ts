@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { StringFieldProcessor } from "@app/processors";
-import { MaxLengthValidator, MinLengthValidator } from "@app/validators";
+import { MaxLengthValidator, MinLengthValidator } from "@app/validators/string";
+import { Validator } from "@app/validators/validator";
 
 describe("StringProcessor", () => {
   describe("toInternalValue method", () => {
@@ -65,7 +66,13 @@ describe("StringProcessor", () => {
     ])("Should $testName", ({ config, expectedValidators }) => {
       const processor = new StringFieldProcessor(config);
 
-      expect((processor as any).validators).toMatchObject(expectedValidators);
+      expect(
+        (
+          processor as StringFieldProcessor & {
+            validators: Validator<unknown>[];
+          }
+        ).validators
+      ).toMatchObject(expectedValidators);
     });
   });
 });
