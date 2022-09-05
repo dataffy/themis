@@ -30,8 +30,12 @@ export class DateFieldProcessor extends FieldProcessor<
       return this.parseIsoDate(data);
     }
 
+    return this.parseDateFormat(data);
+  }
+
+  private parseDateFormat(value: string): Date {
     for (const format of this.configuration.formats) {
-      const date = parse(data, format, new Date());
+      const date = parse(value, format, new Date());
 
       if (date instanceof Date && !isNaN(date.valueOf())) {
         return date;
