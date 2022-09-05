@@ -10,6 +10,10 @@ import {
   StringFieldProcessor,
 } from "@app/processors";
 import { registerField, registerNestedValidatorField } from "@app/fields/utils";
+import {
+  DateFieldConfig,
+  DateFieldProcessor,
+} from "@app/processors/date.processor";
 
 export type ValidationField<T extends FieldConfig> = (
   configuration?: T
@@ -77,6 +81,22 @@ export const FloatField: ValidationField<FloatFieldConfig> =
   (configuration?: FloatFieldConfig) =>
   (target: object, propertyKey: string): void => {
     registerField(target, propertyKey, configuration, FloatFieldProcessor);
+  };
+
+/**
+ * Used to register the class property as a date field
+ * @param configuration
+ * @constructor
+ * @example
+ * export class EventSchema {
+ *   @DateField()
+ *   startDate: Date
+ * }
+ */
+export const DateField: ValidationField<DateFieldConfig> =
+  (configuration?: DateFieldConfig) =>
+  (target: object, propertyKey: string): void => {
+    registerField(target, propertyKey, configuration, DateFieldProcessor);
   };
 
 export type NestedFieldConfiguration<T> = {

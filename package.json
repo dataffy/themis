@@ -20,6 +20,9 @@
     "url": "https://github.com/dataffy/schema-validation/issues"
   },
   "homepage": "https://github.com/dataffy/schema-validation#readme",
+  "dependencies": {
+    "date-fns": "^2.29.2"
+  },
   "devDependencies": {
     "@faker-js/faker": "^7.5.0",
     "@types/jest": "^29.0.0",
