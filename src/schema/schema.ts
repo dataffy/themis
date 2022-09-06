@@ -5,7 +5,7 @@ import {
 import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
 import { ValidationError } from "@app/errors/validation.error";
 
-export type ValidatorClass<
+export type SchemaClass<
   T extends Schema<U>,
   U,
   O extends Options = Options
@@ -75,7 +75,8 @@ export class Schema<T, Context = unknown> {
 
   private nestedFields(
     validateClassMetadata: ValidatorClassConfiguration<
-      FieldProcessor<FieldConfig, unknown, unknown>
+      FieldProcessor<FieldConfig, unknown, unknown>,
+      SchemaClass<Schema<unknown>, unknown>
     >
   ): ValidationErrors {
     const errors: ValidationErrors = {};
@@ -84,7 +85,7 @@ export class Schema<T, Context = unknown> {
       (validatorProperty: string) => {
         const typedValidatorProperty = validatorProperty as keyof T;
         const validatorClass =
-          validateClassMetadata.nestedValidators[validatorProperty];
+          validateClassMetadata.nestedValidators[validatorProperty].validator;
 
         if (this.initialData[typedValidatorProperty] === undefined) {
           if (this.options.partialValidation) {

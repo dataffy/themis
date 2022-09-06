@@ -4,6 +4,7 @@ import {
   ProcessorClass,
 } from "@app/processors/field.processor";
 import { NestedFieldConfiguration } from "@app/fields";
+import { Schema, SchemaClass } from "@app/schema/schema";
 
 export type ValidatorConfiguration<
   T extends FieldProcessor<FieldConfig, unknown, unknown>
@@ -11,19 +12,27 @@ export type ValidatorConfiguration<
   processor: T;
 };
 
+export type NestedValidatorConfiguration<
+  V extends SchemaClass<Schema<unknown>, unknown>
+> = {
+  validator: V;
+};
+
 export type ValidatorClassConfiguration<
-  T extends FieldProcessor<FieldConfig, unknown, unknown>
+  T extends FieldProcessor<FieldConfig, unknown, unknown>,
+  V extends SchemaClass<Schema<unknown>, unknown>
 > = {
   registered: boolean;
   properties: { [propertyKey: string]: ValidatorConfiguration<T> };
-  nestedValidators: { [propertyKey: string]: any }; //TODO: Update nestedValidators type
+  nestedValidators: { [propertyKey: string]: NestedValidatorConfiguration<V> };
 };
 
 export class ValidatorFieldsMetadataStorage {
   private static instance: ValidatorFieldsMetadataStorage;
   protected validatorsClasses: {
     [validatorClassName: string]: ValidatorClassConfiguration<
-      FieldProcessor<FieldConfig, unknown, unknown>
+      FieldProcessor<FieldConfig, unknown, unknown>,
+      SchemaClass<Schema<unknown>, unknown>
     >;
   } = {};
 
@@ -56,7 +65,7 @@ export class ValidatorFieldsMetadataStorage {
    * @param validatorClassName - The validator class name for which the validation field is being registered
    * @param propertyKey - The key that the validator field is used on
    * @param configuration - The configuration of the validator
-   * @param processorClass - The class used for processing the proeperty
+   * @param processorClass - The class used for processing the property
    *
    */
   addClassValidatorDefinition<
@@ -85,17 +94,13 @@ export class ValidatorFieldsMetadataStorage {
    * Add the validator definition metadata for the specified validatorClassName
    *
    * @param validatorClassName - The validator class name for which the validation field is being registered
-   * @param validatorName - Specifies the name of the validator field
    * @param propertyKey - The key that the validator field is used on
    * @param configuration - The configuration of the validator
    *
    */
-  addClassNestedValidatorDefinition(
-    validatorClassName: string,
-    validatorName: string,
-    propertyKey: string,
-    configuration: NestedFieldConfiguration<any>
-  ): void {
+  addClassNestedValidatorDefinition<
+    T extends NestedFieldConfiguration<Schema<unknown>, unknown>
+  >(validatorClassName: string, propertyKey: string, configuration: T): void {
     if (!this.validatorsClasses[validatorClassName]) {
       this.validatorsClasses[validatorClassName] = {
         registered: false,
@@ -104,12 +109,9 @@ export class ValidatorFieldsMetadataStorage {
       };
     }
 
-    this.validatorsClasses[validatorClassName].nestedValidators[propertyKey] =
-      configuration.validator;
-  }
-
-  removeValidatorClass(validatorClassName: string): void {
-    delete this.validatorsClasses[validatorClassName];
+    this.validatorsClasses[validatorClassName].nestedValidators[
+      propertyKey
+    ].validator = configuration.validator;
   }
 
   /**
@@ -119,7 +121,10 @@ export class ValidatorFieldsMetadataStorage {
    */
   getValidatorClassMetadata(
     validatorClass: string
-  ): ValidatorClassConfiguration<FieldProcessor<unknown, unknown, unknown>> {
+  ): ValidatorClassConfiguration<
+    FieldProcessor<unknown, unknown, unknown>,
+    SchemaClass<Schema<unknown>, unknown>
+  > {
     return this.validatorsClasses[validatorClass];
   }
 }
