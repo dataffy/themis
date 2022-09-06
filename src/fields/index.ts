@@ -9,7 +9,8 @@ import {
   StringFieldConfig,
   StringFieldProcessor,
 } from "@app/processors";
-import { registerField, registerNestedValidatorField } from "@app/fields/utils";
+import { registerField, registerNestedSchemaField } from "@app/fields/utils";
+import { Schema, SchemaClass } from "@app/schema/schema";
 import {
   DateFieldConfig,
   DateFieldProcessor,
@@ -99,8 +100,8 @@ export const DateField: ValidationField<DateFieldConfig> =
     registerField(target, propertyKey, configuration, DateFieldProcessor);
   };
 
-export type NestedFieldConfiguration<T> = {
-  validator: any; //TODO: Update type
+export type NestedFieldConfiguration<T extends Schema<U>, U> = {
+  validator: SchemaClass<T, U>;
 };
 
 /**
@@ -109,12 +110,9 @@ export type NestedFieldConfiguration<T> = {
  * @constructor
  */
 export const NestedField =
-  <T>(configuration: NestedFieldConfiguration<T>) =>
+  <U extends Schema<unknown>, T extends NestedFieldConfiguration<U, unknown>>(
+    configuration: T
+  ) =>
   (target: object, propertyKey: string): void => {
-    registerNestedValidatorField(
-      target,
-      "NestedField",
-      propertyKey,
-      configuration
-    );
+    registerNestedSchemaField(target, propertyKey, configuration);
   };

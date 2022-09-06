@@ -5,25 +5,23 @@ import {
   ProcessorClass,
 } from "@app/processors/field.processor";
 import { NestedFieldConfiguration } from "@app/fields";
-
-// export type Constructable<T, O extends Options = Options> = new (obj: T, options: O) => ValidatorClass<T>;
+import { Schema } from "@app/schema/schema";
 
 /**
  * Registers a nested validator decorator
- * @param validatorClass - The validator field target class
- * @param validatorName - The validator field class name
+ * @param schemaClass - The validator field target class
  * @param propertyKey - The property key for which the validator is added
  * @param configuration - The validator field configuration
  */
-export const registerNestedValidatorField = (
-  validatorClass: object,
-  validatorName: string,
+export const registerNestedSchemaField = <
+  T extends NestedFieldConfiguration<Schema<unknown>, unknown>
+>(
+  schemaClass: object,
   propertyKey: string,
-  configuration: NestedFieldConfiguration<any>
+  configuration: T
 ): void => {
   ValidatorFieldsMetadataStorage.storage.addClassNestedValidatorDefinition(
-    validatorClass.constructor.name,
-    validatorName,
+    schemaClass.constructor.name,
     propertyKey,
     configuration
   );
@@ -31,10 +29,10 @@ export const registerNestedValidatorField = (
 
 /**
  *  Registers a validator decorator
- * @param validatorClass - The validator field target class
+ * @param schemaClass - The validator field target class
  * @param propertyKey - The property key for which the validator is added
  * @param configuration - The validator field configuration
- * @param processorClass - The class used for processing the proeperty
+ * @param processorClass - The class used for processing the property
  * @example
  * registerValidationField(
  *  UserValidator,
@@ -48,13 +46,13 @@ export const registerField = <
   C extends FieldConfig,
   T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
 >(
-  validatorClass: object,
+  schemaClass: object,
   propertyKey: string,
   configuration: C,
   processorClass: T
 ): void => {
   ValidatorFieldsMetadataStorage.storage.addClassValidatorDefinition(
-    validatorClass.constructor.name,
+    schemaClass.constructor.name,
     propertyKey,
     configuration,
     processorClass
