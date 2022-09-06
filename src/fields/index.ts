@@ -12,8 +12,8 @@ import {
 import { registerField, registerNestedSchemaField } from "@app/fields/utils";
 import { Schema, SchemaClass } from "@app/schema/schema";
 import {
-    DateFieldConfig,
-    DateFieldProcessor,
+  DateFieldConfig,
+  DateFieldProcessor,
 } from "@app/processors/date.processor";
 
 export type ValidationField<T extends FieldConfig> = (

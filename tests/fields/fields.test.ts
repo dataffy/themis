@@ -1,5 +1,6 @@
 import {
-  BooleanField, DateField,
+  BooleanField,
+  DateField,
   FloatField,
   IntegerField,
   NestedField,
@@ -18,7 +19,10 @@ import {
   StringFieldConfig,
   StringFieldProcessor,
 } from "@app/processors";
-import {DateFieldConfig, DateFieldProcessor} from "@app/processors/date.processor";
+import {
+  DateFieldConfig,
+  DateFieldProcessor,
+} from "@app/processors/date.processor";
 
 describe("Fields", () => {
   it.each([
@@ -58,7 +62,7 @@ describe("Fields", () => {
       fieldName: "DateField",
       field: DateField,
       configuration: {
-        formats: ["MM/dd/yyyy",],
+        formats: ["MM/dd/yyyy"],
       } as DateFieldConfig,
       processor: DateFieldProcessor,
     },
@@ -73,15 +77,14 @@ describe("Fields", () => {
 
       field(configuration)(target, propertyKey);
 
-      expect(registerFieldMock.mock.calls.length).toEqual(1);
+      expect(registerFieldMock).toBeCalledTimes(1);
 
-      const [callTarget, callPropertyKey, callConfiguration, callProcessor] =
-        registerFieldMock.mock.calls[0];
-
-      expect(target).toEqual(callTarget);
-      expect(propertyKey).toEqual(callPropertyKey);
-      expect(configuration).toEqual(callConfiguration);
-      expect(processor).toEqual(callProcessor);
+      expect(registerFieldMock).toBeCalledWith(
+        target,
+        propertyKey,
+        configuration,
+        processor
+      );
     }
   );
   it("Should register nested field successfully for NestedField", () => {
@@ -92,19 +95,17 @@ describe("Fields", () => {
     } as NestedFieldConfiguration<SchemaMock, unknown>;
     const target = SchemaMock;
 
-    const registerFieldMock = jest
+    const registerNestedSchemaField = jest
       .spyOn(fieldsUtils, "registerNestedSchemaField")
       .mockImplementationOnce(() => {});
 
     field(configuration)(target, propertyKey);
 
-    expect(registerFieldMock.mock.calls.length).toEqual(1);
-
-    const [callTarget, callPropertyKey, callConfiguration] =
-      registerFieldMock.mock.calls[0];
-
-    expect(target).toEqual(callTarget);
-    expect(propertyKey).toEqual(callPropertyKey);
-    expect(configuration).toEqual(callConfiguration);
+    expect(registerNestedSchemaField).toBeCalledTimes(1);
+    expect(registerNestedSchemaField).toBeCalledWith(
+      target,
+      propertyKey,
+      configuration
+    );
   });
 });

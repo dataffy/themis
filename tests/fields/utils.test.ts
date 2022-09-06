@@ -23,16 +23,13 @@ describe("Fields Utils", () => {
 
       registerNestedSchemaField(schemaClass, propertyKey, configuration);
 
-      expect(addClassNestedValidatorDefinitionMock.mock.calls.length).toEqual(
-        1
+      expect(addClassNestedValidatorDefinitionMock).toBeCalledTimes(1);
+
+      expect(addClassNestedValidatorDefinitionMock).toBeCalledWith(
+        schemaClass.constructor.name,
+        propertyKey,
+        configuration
       );
-
-      const [callSchemaClass, callPropertyKey, callConfiguration] =
-        addClassNestedValidatorDefinitionMock.mock.calls[0];
-
-      expect(schemaClass.constructor.name).toEqual(callSchemaClass);
-      expect(propertyKey).toEqual(callPropertyKey);
-      expect(configuration).toEqual(callConfiguration);
     });
   });
   describe("registerField", () => {
@@ -53,19 +50,13 @@ describe("Fields Utils", () => {
 
       registerField(schemaClass, propertyKey, configuration, processorClass);
 
-      expect(addClassValidatorDefinitionMock.mock.calls.length).toEqual(1);
-
-      const [
-        callSchemaClass,
-        callPropertyKey,
-        callConfiguration,
-        callProcessorClass,
-      ] = addClassValidatorDefinitionMock.mock.calls[0];
-
-      expect(schemaClass.constructor.name).toEqual(callSchemaClass);
-      expect(propertyKey).toEqual(callPropertyKey);
-      expect(configuration).toEqual(callConfiguration);
-      expect(processorClass).toEqual(callProcessorClass);
+      expect(addClassValidatorDefinitionMock).toBeCalledTimes(1);
+      expect(addClassValidatorDefinitionMock).toBeCalledWith(
+        schemaClass.constructor.name,
+        propertyKey,
+        configuration,
+        processorClass
+      );
     });
   });
 });
