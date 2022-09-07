@@ -14,11 +14,9 @@ export type StringFieldConfig = FieldConfig &
     minLength: number;
   }>;
 
-export class StringFieldProcessor extends FieldProcessor<
-  StringFieldConfig,
-  string,
-  string
-> {
+export class StringFieldProcessor<
+  T extends StringFieldConfig = StringFieldConfig
+> extends FieldProcessor<T, string, string> {
   toInternalValue(data: string): string {
     if (!(typeof data === "string")) {
       throw new ValidateError("Not a valid string");
