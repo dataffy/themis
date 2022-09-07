@@ -3,36 +3,41 @@ import {
   FieldProcessor,
   ProcessorClass,
 } from "@app/processors/field.processor";
-import { NestedFieldConfiguration } from "@app/fields";
-import { Schema, SchemaClass } from "@app/schema/schema";
+import {
+  DecoratorConfig,
+  DecoratorFieldConfig,
+  decoratorFields,
+  NestedFieldConfiguration,
+} from "@app/fields";
+import { Schema } from "@app/schema/schema";
 
-export type ValidatorConfiguration<
+export type PropertyConfiguration<
   T extends FieldProcessor<FieldConfig, unknown, unknown>
 > = {
   processor: T;
+  configuration: DecoratorConfig;
 };
 
-export type NestedValidatorConfiguration<
-  V extends SchemaClass<Schema<unknown>, unknown>
-> = {
-  validator: V;
-};
-
-export type ValidatorClassConfiguration<
-  T extends FieldProcessor<FieldConfig, unknown, unknown>,
-  V extends SchemaClass<Schema<unknown>, unknown>
+export type SchemaClassConfiguration<
+  T extends FieldProcessor<FieldConfig, unknown, unknown>
 > = {
   registered: boolean;
-  properties: { [propertyKey: string]: ValidatorConfiguration<T> };
-  nestedValidators: { [propertyKey: string]: NestedValidatorConfiguration<V> };
+  properties: { [propertyKey: string]: PropertyConfiguration<T> };
+  nestedValidators: {
+    [propertyKey: string]: NestedFieldConfiguration<Schema<unknown>, unknown>;
+  };
 };
 
-export class ValidatorFieldsMetadataStorage {
-  private static instance: ValidatorFieldsMetadataStorage;
-  protected validatorsClasses: {
-    [validatorClassName: string]: ValidatorClassConfiguration<
-      FieldProcessor<FieldConfig, unknown, unknown>,
-      SchemaClass<Schema<unknown>, unknown>
+type Configs<T> = {
+  fieldConfig: T;
+  decoratorConfig: DecoratorConfig;
+};
+
+export class SchemaMetadataStorage {
+  private static instance: SchemaMetadataStorage;
+  protected schemaClasses: {
+    [schemaClassName: string]: SchemaClassConfiguration<
+      FieldProcessor<FieldConfig, unknown, unknown>
     >;
   } = {};
 
@@ -41,9 +46,9 @@ export class ValidatorFieldsMetadataStorage {
   /**
    * Returns the ValidationFieldsMetadataStorage instance
    */
-  static get storage(): ValidatorFieldsMetadataStorage {
+  static get storage(): SchemaMetadataStorage {
     if (!this.instance) {
-      this.instance = new ValidatorFieldsMetadataStorage();
+      this.instance = new SchemaMetadataStorage();
     }
 
     return this.instance;
@@ -53,78 +58,107 @@ export class ValidatorFieldsMetadataStorage {
    * Used to mark the validator class as registered. If a validator class is not
    * registered using this method, it will throw an error when trying to use it for
    * getting the validation fields metadata
-   * @param validatorClassName
+   * @param schemaClassName
    */
-  addValidatorClass(validatorClassName: string): void {
-    this.validatorsClasses[validatorClassName].registered = true;
+  registerSchemaClass(schemaClassName: string): void {
+    if (!this.schemaClasses[schemaClassName]) {
+      throw new Error(
+        `${schemaClassName} is not configured in storage. Use addSchemaDefinition method to add the configuration`
+      );
+    }
+
+    this.schemaClasses[schemaClassName].registered = true;
   }
 
   /**
-   * Add the validator definition metadata for the specified validatorClassName
+   * Add the validator definition metadata for the specified schemaClassName
    *
-   * @param validatorClassName - The validator class name for which the validation field is being registered
+   * @param schemaClassName - The validator class name for which the validation field is being registered
    * @param propertyKey - The key that the validator field is used on
    * @param configuration - The configuration of the validator
    * @param processorClass - The class used for processing the property
    *
    */
-  addClassValidatorDefinition<
+  addSchemaDefinition<
     C extends FieldConfig,
     T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
   >(
-    validatorClassName: string,
+    schemaClassName: string,
     propertyKey: string,
-    configuration: C,
+    configuration: DecoratorFieldConfig<C>,
     processorClass: T
   ): void {
-    if (!this.validatorsClasses[validatorClassName]) {
-      this.validatorsClasses[validatorClassName] = {
+    if (!this.schemaClasses[schemaClassName]) {
+      this.schemaClasses[schemaClassName] = {
         registered: false,
         properties: {},
         nestedValidators: {},
       };
     }
 
-    this.validatorsClasses[validatorClassName].properties[propertyKey] = {
-      processor: new processorClass(configuration || {}),
+    const configs: Configs<C> = this.getDecoratorAndFieldConfig(configuration);
+
+    this.schemaClasses[schemaClassName].properties[propertyKey] = {
+      processor: new processorClass(configs.fieldConfig || {}),
+      configuration: configs.decoratorConfig,
     };
   }
 
   /**
-   * Add the validator definition metadata for the specified validatorClassName
+   * Add the validator definition metadata for the specified schemaClassName
    *
-   * @param validatorClassName - The validator class name for which the validation field is being registered
+   * @param schemaClassName - The validator class name for which the validation field is being registered
    * @param propertyKey - The key that the validator field is used on
    * @param configuration - The configuration of the validator
    *
    */
-  addClassNestedValidatorDefinition<
+  addNestedSchemaDefinition<
     T extends NestedFieldConfiguration<Schema<unknown>, unknown>
-  >(validatorClassName: string, propertyKey: string, configuration: T): void {
-    if (!this.validatorsClasses[validatorClassName]) {
-      this.validatorsClasses[validatorClassName] = {
+  >(schemaClassName: string, propertyKey: string, configuration: T): void {
+    if (!this.schemaClasses[schemaClassName]) {
+      this.schemaClasses[schemaClassName] = {
         registered: false,
         properties: {},
         nestedValidators: {},
       };
     }
 
-    this.validatorsClasses[validatorClassName].nestedValidators[
-      propertyKey
-    ].validator = configuration.validator;
+    this.schemaClasses[schemaClassName].nestedValidators[propertyKey] =
+      configuration;
   }
 
   /**
    * Used for retrieving all the validator class metadata for the specified validator class
    *
-   * @param validatorClass
+   * @param schemaClass
    */
-  getValidatorClassMetadata(
-    validatorClass: string
-  ): ValidatorClassConfiguration<
-    FieldProcessor<unknown, unknown, unknown>,
-    SchemaClass<Schema<unknown>, unknown>
-  > {
-    return this.validatorsClasses[validatorClass];
+  getSchemaClassMetadata(
+    schemaClass: string
+  ): SchemaClassConfiguration<FieldProcessor<unknown, unknown, unknown>> {
+    return this.schemaClasses[schemaClass];
+  }
+
+  private getDecoratorAndFieldConfig<T>(
+    decoratorFieldConfig: DecoratorFieldConfig<T>
+  ): Configs<T> {
+    if (!decoratorFieldConfig) {
+      return {
+        fieldConfig: null,
+        decoratorConfig: null,
+      };
+    }
+
+    const decoratorConfig: DecoratorConfig = {};
+    const config: DecoratorFieldConfig<T> = { ...decoratorFieldConfig };
+
+    decoratorFields.forEach((field: keyof DecoratorConfig) => {
+      decoratorConfig[field] = decoratorFieldConfig[field];
+      delete config[field];
+    });
+
+    return {
+      fieldConfig: config,
+      decoratorConfig,
+    };
   }
 }

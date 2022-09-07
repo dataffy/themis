@@ -1,6 +1,6 @@
 import {
-  ValidatorClassConfiguration,
-  ValidatorFieldsMetadataStorage,
+  SchemaClassConfiguration,
+  SchemaMetadataStorage,
 } from "@app/schema/storage";
 import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
 import { ValidationError } from "@app/errors/validation.error";
@@ -22,9 +22,7 @@ export class Schema<T, Context = unknown> {
   protected validatedFields: Record<string, unknown>;
 
   constructor(obj: T, options: Options) {
-    ValidatorFieldsMetadataStorage.storage.addValidatorClass(
-      this.constructor.name
-    );
+    SchemaMetadataStorage.storage.registerSchemaClass(this.constructor.name);
     this.initialData = obj;
     this.validatedFields = {};
     this.options = options;
@@ -37,7 +35,7 @@ export class Schema<T, Context = unknown> {
 
   private validateFields(): ValidationErrors {
     const validateClassMetadata =
-      ValidatorFieldsMetadataStorage.storage.getValidatorClassMetadata(
+      SchemaMetadataStorage.storage.getSchemaClassMetadata(
         this.constructor.name
       );
 
@@ -45,11 +43,12 @@ export class Schema<T, Context = unknown> {
 
     Object.keys(validateClassMetadata.properties).forEach(
       (validatorProperty: string) => {
-        const typedValidatorProperty = validatorProperty as keyof T;
         const propertyConfiguration =
           validateClassMetadata.properties[validatorProperty];
+        const fromField = (propertyConfiguration.configuration.fromField ||
+          validatorProperty) as keyof T;
 
-        if (this.initialData[typedValidatorProperty] === undefined) {
+        if (this.initialData[fromField] === undefined) {
           if (this.options.partialValidation) {
             return;
           }
@@ -57,7 +56,7 @@ export class Schema<T, Context = unknown> {
         }
 
         try {
-          const attribute = this.initialData[typedValidatorProperty];
+          const attribute = this.initialData[fromField];
           this.validatedFields[validatorProperty] =
             propertyConfiguration.processor.validate(attribute);
         } catch ({ message }) {
@@ -74,28 +73,28 @@ export class Schema<T, Context = unknown> {
   }
 
   private nestedFields(
-    validateClassMetadata: ValidatorClassConfiguration<
-      FieldProcessor<FieldConfig, unknown, unknown>,
-      SchemaClass<Schema<unknown>, unknown>
+    validateClassMetadata: SchemaClassConfiguration<
+      FieldProcessor<FieldConfig, unknown, unknown>
     >
   ): ValidationErrors {
     const errors: ValidationErrors = {};
 
     Object.keys(validateClassMetadata.nestedValidators).forEach(
       (validatorProperty: string) => {
-        const typedValidatorProperty = validatorProperty as keyof T;
-        const validatorClass =
-          validateClassMetadata.nestedValidators[validatorProperty].validator;
+        const validatorConfig =
+          validateClassMetadata.nestedValidators[validatorProperty];
+        const fromField = (validatorConfig.fromField ||
+          validatorProperty) as keyof T;
 
-        if (this.initialData[typedValidatorProperty] === undefined) {
+        if (this.initialData[fromField] === undefined) {
           if (this.options.partialValidation) {
             return;
           }
           errors[validatorProperty] = [`Missing field ${validatorProperty}`];
         }
 
-        const validator = new validatorClass(
-          this.initialData[typedValidatorProperty],
+        const validator = new validatorConfig.validator(
+          this.initialData[fromField],
           this.options
         );
 

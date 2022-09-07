@@ -1,4 +1,4 @@
-import { ValidatorFieldsMetadataStorage } from "@app/schema/storage";
+import { SchemaMetadataStorage } from "@app/schema/storage";
 import { SchemaMock } from "@tests/schemas/mocks/schema.mock";
 import { NestedFieldConfiguration } from "@app/fields";
 import { registerField, registerNestedSchemaField } from "@app/fields/utils";
@@ -15,10 +15,7 @@ describe("Fields Utils", () => {
       } as NestedFieldConfiguration<SchemaMock, unknown>;
 
       const addClassNestedValidatorDefinitionMock = jest
-        .spyOn(
-          ValidatorFieldsMetadataStorage.prototype,
-          "addClassNestedValidatorDefinition"
-        )
+        .spyOn(SchemaMetadataStorage.prototype, "addNestedSchemaDefinition")
         .mockImplementationOnce(() => {});
 
       registerNestedSchemaField(schemaClass, propertyKey, configuration);
@@ -42,10 +39,7 @@ describe("Fields Utils", () => {
       const processorClass = ProcessorMock;
 
       const addClassValidatorDefinitionMock = jest
-        .spyOn(
-          ValidatorFieldsMetadataStorage.prototype,
-          "addClassValidatorDefinition"
-        )
+        .spyOn(SchemaMetadataStorage.prototype, "addSchemaDefinition")
         .mockImplementationOnce(() => {});
 
       registerField(schemaClass, propertyKey, configuration, processorClass);
