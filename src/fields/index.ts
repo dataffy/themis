@@ -17,8 +17,16 @@ import {
 } from "@app/processors/date.processor";
 
 export type ValidationField<T extends FieldConfig> = (
-  configuration?: T
+  configuration?: DecoratorFieldConfig<T>
 ) => (target: object, propertyKey: string) => void;
+
+export type DecoratorConfig = Partial<{
+  fromField: string;
+}>;
+
+export type DecoratorFieldConfig<T extends FieldConfig> = DecoratorConfig & T;
+
+export const decoratorFields: (keyof DecoratorConfig)[] = ["fromField"];
 
 /**
  * Used to register the class property as a string field
@@ -31,7 +39,7 @@ export type ValidationField<T extends FieldConfig> = (
  * }
  */
 export const StringField: ValidationField<StringFieldConfig> =
-  (configuration?: StringFieldConfig) =>
+  (configuration?: DecoratorFieldConfig<StringFieldConfig>) =>
   (target: object, propertyKey: string): void => {
     registerField(target, propertyKey, configuration, StringFieldProcessor);
   };
@@ -47,7 +55,7 @@ export const StringField: ValidationField<StringFieldConfig> =
  * }
  */
 export const IntegerField: ValidationField<IntegerFieldConfig> =
-  (configuration?: IntegerFieldConfig) =>
+  (configuration?: DecoratorFieldConfig<IntegerFieldConfig>) =>
   (target: object, propertyKey: string): void => {
     registerField(target, propertyKey, configuration, IntegerFieldProcessor);
   };
@@ -63,7 +71,7 @@ export const IntegerField: ValidationField<IntegerFieldConfig> =
  * }
  */
 export const BooleanField: ValidationField<BooleanFieldConfig> =
-  (configuration?: BooleanFieldConfig) =>
+  (configuration?: DecoratorFieldConfig<BooleanFieldConfig>) =>
   (target: object, propertyKey: string): void => {
     registerField(target, propertyKey, configuration, BooleanFieldProcessor);
   };
@@ -79,7 +87,7 @@ export const BooleanField: ValidationField<BooleanFieldConfig> =
  * }
  */
 export const FloatField: ValidationField<FloatFieldConfig> =
-  (configuration?: FloatFieldConfig) =>
+  (configuration?: DecoratorFieldConfig<FloatFieldConfig>) =>
   (target: object, propertyKey: string): void => {
     registerField(target, propertyKey, configuration, FloatFieldProcessor);
   };
@@ -95,14 +103,14 @@ export const FloatField: ValidationField<FloatFieldConfig> =
  * }
  */
 export const DateField: ValidationField<DateFieldConfig> =
-  (configuration?: DateFieldConfig) =>
+  (configuration?: DecoratorFieldConfig<DateFieldConfig>) =>
   (target: object, propertyKey: string): void => {
     registerField(target, propertyKey, configuration, DateFieldProcessor);
   };
 
 export type NestedFieldConfiguration<T extends Schema<U>, U> = {
   validator: SchemaClass<T, U>;
-};
+} & DecoratorConfig;
 
 /**
  * Nested field that registers the field as nested

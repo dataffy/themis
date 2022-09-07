@@ -1,10 +1,10 @@
-import { ValidatorFieldsMetadataStorage } from "@app/schema/storage";
+import { SchemaMetadataStorage } from "@app/schema/storage";
 import {
   FieldConfig,
   FieldProcessor,
   ProcessorClass,
 } from "@app/processors/field.processor";
-import { NestedFieldConfiguration } from "@app/fields";
+import { DecoratorFieldConfig, NestedFieldConfiguration } from "@app/fields";
 import { Schema } from "@app/schema/schema";
 
 /**
@@ -20,7 +20,7 @@ export const registerNestedSchemaField = <
   propertyKey: string,
   configuration: T
 ): void => {
-  ValidatorFieldsMetadataStorage.storage.addClassNestedValidatorDefinition(
+  SchemaMetadataStorage.storage.addNestedSchemaDefinition(
     schemaClass.constructor.name,
     propertyKey,
     configuration
@@ -48,10 +48,10 @@ export const registerField = <
 >(
   schemaClass: object,
   propertyKey: string,
-  configuration: C,
+  configuration: DecoratorFieldConfig<C>,
   processorClass: T
 ): void => {
-  ValidatorFieldsMetadataStorage.storage.addClassValidatorDefinition(
+  SchemaMetadataStorage.storage.addSchemaDefinition(
     schemaClass.constructor.name,
     propertyKey,
     configuration,
