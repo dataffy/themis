@@ -12,13 +12,13 @@ describe("EmailFieldProcessor", () => {
         expectedValidators: [new EmailValidator()],
       },
     ])("Should $testName", ({ config, expectedValidators }) => {
-      const initialiseValidatorsMocked = jest
+      const initialiseValidatorsMock = jest
         .spyOn(StringFieldProcessor.prototype, "initialiseValidators")
         .mockImplementationOnce(() => {});
 
       const processor = new EmailFieldProcessor(config);
 
-      expect(initialiseValidatorsMocked).toBeCalledTimes(1);
+      expect(initialiseValidatorsMock).toBeCalledTimes(1);
       expect(
         (
           processor as EmailFieldProcessor & {
