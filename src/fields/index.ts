@@ -1,4 +1,8 @@
-import { FieldConfig } from "@app/processors/field.processor";
+import {
+  EmailFieldConfig,
+  EmailFieldProcessor,
+  FieldConfig,
+} from "../processors";
 import {
   BooleanFieldConfig,
   BooleanFieldProcessor,
@@ -8,13 +12,12 @@ import {
   IntegerFieldProcessor,
   StringFieldConfig,
   StringFieldProcessor,
-} from "@app/processors";
-import { registerField, registerNestedSchemaField } from "@app/fields/utils";
-import { Schema, SchemaClass } from "@app/schema/schema";
-import {
-  DateFieldConfig,
-  DateFieldProcessor,
-} from "@app/processors/date.processor";
+} from "../processors";
+import { registerField, registerNestedSchemaField } from "./utils";
+import { Schema, SchemaClass } from "../schema";
+import { DateFieldConfig, DateFieldProcessor } from "../processors";
+
+export * from "./utils";
 
 export type ValidationField<T extends FieldConfig> = (
   configuration?: DecoratorFieldConfig<T>
@@ -106,6 +109,22 @@ export const DateField: ValidationField<DateFieldConfig> =
   (configuration?: DecoratorFieldConfig<DateFieldConfig>) =>
   (target: object, propertyKey: string): void => {
     registerField(target, propertyKey, configuration, DateFieldProcessor);
+  };
+
+/**
+ * Used to register the class property as an email field
+ * @param configuration
+ * @constructor
+ * @example
+ * export class UserSchema {
+ *   @EmailField()
+ *   email: string
+ * }
+ */
+export const EmailField: ValidationField<EmailFieldConfig> =
+  (configuration?: DecoratorFieldConfig<EmailFieldConfig>) =>
+  (target: object, propertyKey: string): void => {
+    registerField(target, propertyKey, configuration, EmailFieldProcessor);
   };
 
 export type NestedFieldConfiguration<T extends Schema<U>, U> = {

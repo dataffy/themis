@@ -1,9 +1,9 @@
-import { SchemaMetadataStorage } from "@app/schema/storage";
-import { SchemaMock } from "@tests/schemas/mocks/schema.mock";
-import { NestedFieldConfiguration } from "@app/fields";
-import { registerField, registerNestedSchemaField } from "@app/fields/utils";
-import { FieldConfig } from "@app/processors";
-import { ProcessorMock } from "@tests/processors/mocks/processor.mock";
+import { SchemaMetadataStorage } from "../../src/schema";
+import { SchemaMock } from "../schemas/mocks/schema.mock";
+import { NestedFieldConfiguration } from "../../src/fields";
+import { registerField, registerNestedSchemaField } from "../../src/fields";
+import { FieldConfig } from "../../src/processors";
+import { ProcessorMock } from "../processors/mocks/processor.mock";
 
 describe("Fields Utils", () => {
   describe("registerNestedSchemaField", () => {

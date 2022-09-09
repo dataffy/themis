@@ -1,4 +1,4 @@
-import { Validator } from "@app/validators/validator";
+import { Validator } from "../../../src/validators";
 
 export class ValidatorMock extends Validator<string> {
   constructor() {

@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { FloatFieldProcessor } from "@app/processors";
-import { MaxValueValidator, MinValueValidator } from "@app/validators/number";
-import { Validator } from "@app/validators/validator";
+import { FloatFieldProcessor } from "../../src/processors";
+import { MaxValueValidator, MinValueValidator } from "../../src/validators";
+import { Validator } from "../../src/validators";
 
 describe("FloatProcessor", () => {
   describe("toInternalValue method", () => {

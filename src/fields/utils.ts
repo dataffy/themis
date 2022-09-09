@@ -1,11 +1,7 @@
-import { SchemaMetadataStorage } from "@app/schema/storage";
-import {
-  FieldConfig,
-  FieldProcessor,
-  ProcessorClass,
-} from "@app/processors/field.processor";
-import { DecoratorFieldConfig, NestedFieldConfiguration } from "@app/fields";
-import { Schema } from "@app/schema/schema";
+import { SchemaMetadataStorage } from "../schema";
+import { FieldConfig, FieldProcessor, ProcessorClass } from "../processors";
+import { DecoratorFieldConfig, NestedFieldConfiguration } from ".";
+import { Schema } from "../schema";
 
 /**
  * Registers a nested validator decorator

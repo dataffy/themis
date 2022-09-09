@@ -6,9 +6,9 @@ import {
   NestedField,
   NestedFieldConfiguration,
   StringField,
-} from "@app/fields";
-import * as fieldsUtils from "@app/fields/utils";
-import { SchemaMock } from "@tests/schemas/mocks/schema.mock";
+} from "../../src/fields";
+import * as fieldsUtils from "../../src/fields/utils";
+import { SchemaMock } from "../schemas/mocks/schema.mock";
 import {
   BooleanFieldConfig,
   BooleanFieldProcessor,
@@ -18,11 +18,11 @@ import {
   IntegerFieldProcessor,
   StringFieldConfig,
   StringFieldProcessor,
-} from "@app/processors";
-import {
-  DateFieldConfig,
-  DateFieldProcessor,
-} from "@app/processors/date.processor";
+} from "../../src/processors";
+import { DateFieldConfig, DateFieldProcessor } from "../../src/processors";
+import { faker } from "@faker-js/faker";
+import { EmailFieldConfig, EmailFieldProcessor } from "../../src/processors";
+import { EmailField } from "../../src/fields";
 
 describe("Fields", () => {
   it.each([
@@ -65,6 +65,14 @@ describe("Fields", () => {
         formats: ["MM/dd/yyyy"],
       } as DateFieldConfig,
       processor: DateFieldProcessor,
+    },
+    {
+      fieldName: "EmailField",
+      field: EmailField,
+      configuration: {
+        maxLength: faker.datatype.number({ max: 5 }),
+      } as EmailFieldConfig,
+      processor: EmailFieldProcessor,
     },
   ])(
     "Should register field successfully for $fieldName",

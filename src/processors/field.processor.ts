@@ -1,5 +1,5 @@
-import { Validator } from "@app/validators/validator";
-import { ProcessorValidateError, ValidateError } from "@app/errors";
+import { Validator } from "../validators";
+import { ProcessorValidateError, ValidateError } from "../errors";
 
 export type FieldConfig<T = unknown> = Partial<{
   /**

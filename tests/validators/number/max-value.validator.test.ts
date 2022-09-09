@@ -1,6 +1,6 @@
-import { MaxValueValidator } from "@app/validators/number";
+import { MaxValueValidator } from "../../../src/validators";
 import { faker } from "@faker-js/faker";
-import { ValidateError } from "@app/errors";
+import { ValidateError } from "../../../src/errors";
 
 describe("MaxValueValidator", () => {
   describe("validate method", () => {

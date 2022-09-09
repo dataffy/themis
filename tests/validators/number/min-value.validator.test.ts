@@ -1,6 +1,6 @@
-import { MinValueValidator } from "@app/validators/number";
+import { MinValueValidator } from "../../../src/validators";
 import { faker } from "@faker-js/faker";
-import { ValidateError } from "@app/errors";
+import { ValidateError } from "../../../src/errors";
 
 describe("MinValueValidator", () => {
   describe("validate method", () => {

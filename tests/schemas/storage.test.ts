@@ -1,8 +1,8 @@
-import { SchemaMetadataStorage } from "@app/schema/storage";
-import { SchemaMock } from "@tests/schemas/mocks/schema.mock";
-import { ProcessorMock } from "@tests/processors/mocks/processor.mock";
-import { DecoratorConfig, DecoratorFieldConfig } from "@app/fields";
-import { FieldConfig } from "@app/processors";
+import { SchemaMetadataStorage } from "../../src/schema";
+import { SchemaMock } from "./mocks/schema.mock";
+import { ProcessorMock } from "../processors/mocks/processor.mock";
+import { DecoratorConfig, DecoratorFieldConfig } from "../../src/fields";
+import { FieldConfig } from "../../src/processors";
 
 describe("SchemaMetadataStorage", () => {
   beforeEach(() => {

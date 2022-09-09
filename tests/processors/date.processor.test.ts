@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { DateFieldProcessor } from "@app/processors/date.processor";
+import { DateFieldProcessor } from "../../src/processors";
 import { parse } from "date-fns";
 
 describe("DateProcessor", () => {

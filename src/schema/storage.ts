@@ -1,15 +1,11 @@
-import {
-  FieldConfig,
-  FieldProcessor,
-  ProcessorClass,
-} from "@app/processors/field.processor";
+import { FieldConfig, FieldProcessor, ProcessorClass } from "../processors";
 import {
   DecoratorConfig,
   DecoratorFieldConfig,
   decoratorFields,
   NestedFieldConfiguration,
-} from "@app/fields";
-import { Schema } from "@app/schema/schema";
+} from "../fields";
+import { Schema } from "./schema";
 
 export type PropertyConfiguration<
   T extends FieldProcessor<FieldConfig, unknown, unknown>

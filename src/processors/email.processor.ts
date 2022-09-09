@@ -1,8 +1,5 @@
-import { EmailValidator } from "@app/validators/string/email.validator";
-import {
-  StringFieldConfig,
-  StringFieldProcessor,
-} from "@app/processors/string.processor";
+import { EmailValidator } from "../validators";
+import { StringFieldConfig, StringFieldProcessor } from "./string.processor";
 
 export type EmailFieldConfig = StringFieldConfig;
 

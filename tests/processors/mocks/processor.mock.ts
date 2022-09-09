@@ -1,4 +1,4 @@
-import { FieldConfig, FieldProcessor } from "@app/processors";
+import { FieldConfig, FieldProcessor } from "../../../src/processors";
 
 export class ProcessorMock extends FieldProcessor<
   FieldConfig,

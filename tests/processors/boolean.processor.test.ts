@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { BooleanFieldProcessor } from "@app/processors";
+import { BooleanFieldProcessor } from "../../src/processors";
 
 describe("BooleanProcessor", () => {
   describe("toInternalValue method", () => {
@@ -44,7 +44,7 @@ describe("BooleanProcessor", () => {
         expectedValue: false,
       },
       {
-        testName: "return false when value is \"0\"",
+        testName: "return false when value is 0",
         value: "0",
         expectedError: false,
         expectedValue: false,
@@ -74,7 +74,7 @@ describe("BooleanProcessor", () => {
         expectedValue: true,
       },
       {
-        testName: "return false when value is \"1\"",
+        testName: "return false when value is 1",
         value: "1",
         expectedError: false,
         expectedValue: true,

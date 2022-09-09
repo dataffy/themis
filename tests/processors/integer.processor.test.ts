@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { IntegerFieldProcessor } from "@app/processors";
-import { MaxValueValidator, MinValueValidator } from "@app/validators/number";
-import { Validator } from "@app/validators/validator";
+import { IntegerFieldProcessor } from "../../src/processors";
+import { MaxValueValidator, MinValueValidator } from "../../src/validators";
+import { Validator } from "../../src/validators";
 
 describe("IntegerProcessor", () => {
   describe("toInternalValue method", () => {

@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { StringFieldProcessor } from "@app/processors";
-import { MaxLengthValidator, MinLengthValidator } from "@app/validators/string";
-import { Validator } from "@app/validators/validator";
+import { StringFieldProcessor } from "../../src/processors";
+import { MaxLengthValidator, MinLengthValidator } from "../../src/validators";
+import { Validator } from "../../src/validators";
 
 describe("StringProcessor", () => {
   describe("toInternalValue method", () => {

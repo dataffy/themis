@@ -1,9 +1,6 @@
-import {
-  SchemaClassConfiguration,
-  SchemaMetadataStorage,
-} from "@app/schema/storage";
-import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
-import { ValidationError } from "@app/errors/validation.error";
+import { SchemaClassConfiguration, SchemaMetadataStorage } from "./storage";
+import { FieldConfig, FieldProcessor } from "../processors";
+import { ValidationError } from "../errors";
 
 export type SchemaClass<
   T extends Schema<U>,

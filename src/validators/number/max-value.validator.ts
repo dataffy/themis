@@ -1,5 +1,5 @@
-import { Validator } from "@app/validators/validator";
-import { ValidateError } from "@app/errors";
+import { Validator } from "../validator";
+import { ValidateError } from "../../errors";
 
 export class MaxValueValidator extends Validator<number> {
   constructor(

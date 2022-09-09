@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { ValidateError } from "@app/errors";
-import { EmailValidator } from "@app/validators/string/email.validator";
+import { ValidateError } from "../../../src/errors";
+import { EmailValidator } from "../../../src/validators";
 
 describe("EmailValidator", () => {
   describe("validate method", function () {

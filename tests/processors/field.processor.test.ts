@@ -1,10 +1,10 @@
-import { FieldConfig, FieldProcessor } from "@app/processors";
+import { FieldConfig, FieldProcessor } from "../../src/processors";
 import { faker } from "@faker-js/faker";
-import { ProcessorValidateError, ValidateError } from "@app/errors";
-import { ProcessorMock } from "@tests/processors/mocks/processor.mock";
-import { ValidatorMock } from "@tests/validators/mocks/validator.mock";
-import { MinLengthValidator } from "@app/validators/string";
-import { Validator } from "@app/validators/validator";
+import { ProcessorValidateError, ValidateError } from "../../src/errors";
+import { ProcessorMock } from "./mocks/processor.mock";
+import { ValidatorMock } from "../validators/mocks/validator.mock";
+import { MinLengthValidator } from "../../src/validators";
+import { Validator } from "../../src/validators";
 
 describe("FieldProcessor", () => {
   describe("validate method", () => {

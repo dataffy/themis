@@ -1,3 +1,3 @@
-import { Schema } from "@app/schema/schema";
+import { Schema } from "../../../src/schema";
 
 export class SchemaMock extends Schema<unknown> {}

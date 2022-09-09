@@ -1,7 +1,7 @@
-import { EmailFieldProcessor } from "@app/processors/email.processor";
-import { Validator } from "@app/validators/validator";
-import { EmailValidator } from "@app/validators/string/email.validator";
-import { StringFieldProcessor } from "@app/processors";
+import { EmailFieldProcessor } from "../../src/processors";
+import { Validator } from "../../src/validators";
+import { EmailValidator } from "../../src/validators";
+import { StringFieldProcessor } from "../../src/processors";
 
 describe("EmailFieldProcessor", () => {
   describe("initialiseValidators method", () => {

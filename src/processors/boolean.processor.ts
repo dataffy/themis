@@ -1,5 +1,5 @@
-import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
-import { ValidateError } from "@app/errors";
+import { FieldConfig, FieldProcessor } from "./field.processor";
+import { ValidateError } from "../errors";
 
 export type BooleanFieldConfig = FieldConfig;
 

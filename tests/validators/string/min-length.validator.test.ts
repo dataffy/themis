@@ -1,6 +1,6 @@
-import { MinLengthValidator } from "@app/validators/string";
+import { MinLengthValidator } from "../../../src/validators";
 import { faker } from "@faker-js/faker";
-import { ValidateError } from "@app/errors";
+import { ValidateError } from "../../../src/errors";
 
 describe("MinLengthValidator", () => {
   describe("validate method", () => {
