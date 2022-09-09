@@ -1,7 +1,10 @@
 import { FieldConfig, FieldProcessor } from "@app/processors";
 import { faker } from "@faker-js/faker";
-import { Validator } from "@app/validators/validator";
 import { ProcessorValidateError, ValidateError } from "@app/errors";
+import { ProcessorMock } from "@tests/processors/mocks/processor.mock";
+import { ValidatorMock } from "@tests/validators/mocks/validator.mock";
+import { MinLengthValidator } from "@app/validators/string";
+import { Validator } from "@app/validators/validator";
 
 describe("FieldProcessor", () => {
   describe("validate method", () => {
@@ -38,19 +41,7 @@ describe("FieldProcessor", () => {
     ])(
       "Should check empty values and $testName",
       ({ config, value, expectedError, expectedResult }) => {
-        class DummyFieldProcessor extends FieldProcessor<
-          FieldConfig,
-          string,
-          string
-        > {
-          initialiseValidators(): void {}
-
-          toInternalValue(data: string): string {
-            return data;
-          }
-        }
-
-        const processor = new DummyFieldProcessor(config);
+        const processor = new ProcessorMock(config);
 
         if (expectedError) {
           expect(() => processor.validate(value)).toThrowError(expectedError);
@@ -75,20 +66,12 @@ describe("FieldProcessor", () => {
     ])(
       "Should use internally the result when toInternalValue returns: $name",
       ({ valueFn, value }) => {
-        class DummyFieldProcessor extends FieldProcessor<
-          FieldConfig,
-          string | number,
-          string
-        > {
-          initialiseValidators(): void {}
-
-          toInternalValue(data: string | number): string {
-            return valueFn(data);
-          }
-        }
-
         const expectedResult = valueFn(value);
-        const processor = new DummyFieldProcessor({});
+        const processor = new ProcessorMock({});
+
+        jest
+          .spyOn(processor, "toInternalValue")
+          .mockImplementationOnce(() => valueFn(value));
 
         const validationResult = processor.validate(value);
 
@@ -99,28 +82,28 @@ describe("FieldProcessor", () => {
     it.each([
       {
         testName: "throw error when validation passed successfully",
+        validators: [],
         expectValidationError: "Validation error",
       },
       {
         testName: "not throw error when validation passed successfully",
+        validators: [],
         expectValidationError: false,
       },
-    ])("Should $testName", ({ expectValidationError }) => {
-      class DummyValidator extends Validator<string> {
-        constructor() {
-          super();
-        }
-
-        validate(): void {}
-      }
-
+      {
+        testName: "not throw error when validation passed successfully",
+        validators: [new MinLengthValidator(3)],
+        expectValidationError: false,
+      },
+    ])("Should $testName", ({ validators, expectValidationError }) => {
+      const validator = new ValidatorMock();
       class DummyFieldProcessor extends FieldProcessor<
         FieldConfig,
         string,
         string
       > {
         initialiseValidators(): void {
-          this.validators.push(new DummyValidator());
+          this.validators.push(validator);
         }
 
         toInternalValue(data: string): string {
@@ -129,13 +112,13 @@ describe("FieldProcessor", () => {
       }
 
       const validateSpy = jest
-        .spyOn(DummyValidator.prototype, "validate")
+        .spyOn(validator, "validate")
         .mockImplementationOnce(() => {
           if (expectValidationError) {
             throw new ValidateError(expectValidationError as string);
           }
         });
-      const processor = new DummyFieldProcessor({});
+      const processor = new DummyFieldProcessor({ validators });
       const value = faker.datatype.string();
 
       if (expectValidationError) {
@@ -152,6 +135,13 @@ describe("FieldProcessor", () => {
       } else {
         const validationResult = processor.validate(value);
         expect(validationResult).toEqual(value);
+        expect(
+          (
+            processor as ProcessorMock & {
+              validators: Validator<unknown>[];
+            }
+          ).validators
+        ).toMatchObject([...validators, validator]);
       }
 
       expect(validateSpy).toBeCalledTimes(1);
