@@ -1,4 +1,4 @@
-export type ValidationErrors = { [key: string]: ValidationErrors | string[] };
+import { ValidationErrors } from "@app/schema";
 
 export class ValidationError extends Error {
   errors: ValidationErrors;

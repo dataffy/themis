@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "target": "es2017",
-    "outDir": "./dist",
+    "outDir": "./lib",
     "baseUrl": ".",
+    "declaration": true,
     "noUnusedParameters": false,
     "module": "commonjs",
     "emitDecoratorMetadata": true,
@@ -23,6 +23,6 @@
       "@tests/*": ["tests/*"]
     }
   },
-  "include": ["./**/*.ts", "./**/*.js"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"],
+  "exclude": ["node_modules", "tests"]
 }
