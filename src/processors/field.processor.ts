@@ -1,7 +1,7 @@
 import { Validator } from "@app/validators/validator";
 import { ProcessorValidateError, ValidateError } from "@app/errors";
 
-export type FieldConfig = Partial<{
+export type FieldConfig<T = unknown> = Partial<{
   /**
    * Specifies if the field is nullable. Default value is true
    */
@@ -10,19 +10,26 @@ export type FieldConfig = Partial<{
    * Specifies if the field is required. Default value is true
    */
   required: boolean;
+  /**
+   * Validators against which the value is checked
+   */
+  validators: Validator<T>[];
 }>;
 
 export type ProcessorClass<
   T extends FieldProcessor<C, U, K>,
-  C extends FieldConfig = FieldConfig,
+  C extends FieldConfig<K> = FieldConfig,
   U = unknown,
   K = unknown
 > = new (configuration: C) => T;
 
-export abstract class FieldProcessor<T extends FieldConfig, U, K> {
+export abstract class FieldProcessor<T extends FieldConfig<K>, U, K> {
   protected validators: Validator<K>[] = [];
 
   constructor(protected readonly configuration: T) {
+    if (this.configuration.validators) {
+      this.validators = [...this.configuration.validators];
+    }
     this.initialiseValidators();
   }
 

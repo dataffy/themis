@@ -2,7 +2,7 @@ import { FieldConfig, FieldProcessor } from "@app/processors/field.processor";
 import { ValidateError } from "@app/errors";
 import { MaxLengthValidator, MinLengthValidator } from "@app/validators/string";
 
-export type StringFieldConfig = FieldConfig &
+export type StringFieldConfig = FieldConfig<string> &
   Partial<{
     /**
      * The max length allowed for the field
