@@ -9,12 +9,10 @@ import { Schema } from "../schema";
  * @param propertyKey - The property key for which the validator is added
  * @param configuration - The validator field configuration
  */
-export const registerNestedSchemaField = <
-  T extends NestedFieldConfiguration<Schema<unknown>, unknown>
->(
+export const registerNestedSchemaField = <U extends Schema<K>, K>(
   schemaClass: object,
   propertyKey: string,
-  configuration: T
+  configuration: NestedFieldConfiguration<U, K>
 ): void => {
   SchemaMetadataStorage.storage.addNestedSchemaDefinition(
     schemaClass.constructor.name,

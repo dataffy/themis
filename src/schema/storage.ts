@@ -20,7 +20,7 @@ export type SchemaClassConfiguration<
   registered: boolean;
   properties: { [propertyKey: string]: PropertyConfiguration<T> };
   nestedValidators: {
-    [propertyKey: string]: NestedFieldConfiguration<Schema<unknown>, unknown>;
+    [propertyKey: string]: NestedFieldConfiguration<Schema<any>, any>;
   };
 };
 
@@ -108,9 +108,11 @@ export class SchemaMetadataStorage {
    * @param configuration - The configuration of the validator
    *
    */
-  addNestedSchemaDefinition<
-    T extends NestedFieldConfiguration<Schema<unknown>, unknown>
-  >(schemaClassName: string, propertyKey: string, configuration: T): void {
+  addNestedSchemaDefinition<U extends Schema<K>, K>(
+    schemaClassName: string,
+    propertyKey: string,
+    configuration: NestedFieldConfiguration<U, K>
+  ): void {
     if (!this.schemaClasses[schemaClassName]) {
       this.schemaClasses[schemaClassName] = {
         registered: false,
