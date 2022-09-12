@@ -6,7 +6,7 @@ export type SchemaClass<
   T extends Schema<U>,
   U,
   O extends Options = Options
-> = new (obj: U, options: O) => T;
+> = new (obj: U, options?: O) => T;
 
 export type ValidationErrors = { [key: string]: ValidationErrors | string[] };
 export type Options = {
@@ -18,7 +18,7 @@ export class Schema<T, Context = unknown> {
   protected options: Options;
   protected validatedFields: Record<string, unknown>;
 
-  constructor(obj: T, options: Options) {
+  constructor(obj: T, options?: Options) {
     SchemaMetadataStorage.storage.registerSchemaClass(this.constructor.name);
     this.initialData = obj;
     this.validatedFields = {};
@@ -84,7 +84,10 @@ export class Schema<T, Context = unknown> {
           validatorProperty) as keyof T;
 
         if (this.initialData[fromField] === undefined) {
-          if (this.options.partialValidation) {
+          if (
+            this.options.partialValidation ||
+            validatorConfig.required === false
+          ) {
             return;
           }
           errors[validatorProperty] = [`Missing field ${validatorProperty}`];

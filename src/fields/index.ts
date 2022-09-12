@@ -129,7 +129,8 @@ export const EmailField: ValidationField<EmailFieldConfig> =
 
 export type NestedFieldConfiguration<T extends Schema<U>, U> = {
   validator: SchemaClass<T, U>;
-} & DecoratorConfig;
+} & DecoratorConfig &
+  FieldConfig;
 
 /**
  * Nested field that registers the field as nested
@@ -137,9 +138,7 @@ export type NestedFieldConfiguration<T extends Schema<U>, U> = {
  * @constructor
  */
 export const NestedField =
-  <U extends Schema<unknown>, T extends NestedFieldConfiguration<U, unknown>>(
-    configuration: T
-  ) =>
+  <U extends Schema<K>, K>(configuration: NestedFieldConfiguration<U, K>) =>
   (target: object, propertyKey: string): void => {
     registerNestedSchemaField(target, propertyKey, configuration);
   };
