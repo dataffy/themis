@@ -96,7 +96,7 @@ export class SchemaMetadataStorage {
 
     this.schemaClasses[schemaClassName].properties[propertyKey] = {
       processor: new processorClass(configs.fieldConfig || {}),
-      configuration: configs.decoratorConfig,
+      configuration: configs.decoratorConfig || {},
     };
   }
 
