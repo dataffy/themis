@@ -3,6 +3,7 @@ import {
   DateField,
   FloatField,
   IntegerField,
+  JsonField,
   NestedField,
   NestedFieldConfiguration,
   StringField,
@@ -16,6 +17,8 @@ import {
   FloatFieldProcessor,
   IntegerFieldConfig,
   IntegerFieldProcessor,
+  JsonFieldConfig,
+  JsonFieldProcessor,
   StringFieldConfig,
   StringFieldProcessor,
 } from "../../src/processors";
@@ -73,6 +76,14 @@ describe("Fields", () => {
         maxLength: faker.datatype.number({ max: 5 }),
       } as EmailFieldConfig,
       processor: EmailFieldProcessor,
+    },
+    {
+      fieldName: "JsonField",
+      field: JsonField,
+      configuration: {
+        nullable: true,
+      } as JsonFieldConfig,
+      processor: JsonFieldProcessor,
     },
   ])(
     "Should register field successfully for $fieldName",
