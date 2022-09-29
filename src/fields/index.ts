@@ -146,7 +146,7 @@ export const EmailField: ValidationField<EmailFieldConfig> =
   };
 
 export type NestedFieldConfiguration<T extends Schema<U>, U> = {
-  validator: SchemaClass<T, U>;
+  schema: SchemaClass<T, U>;
 } & DecoratorConfig &
   FieldConfig;
 

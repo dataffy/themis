@@ -14,19 +14,19 @@ export type Options = {
 };
 
 export class Schema<T, Context = unknown> {
-  protected initialData: T;
+  protected initialData: Record<string, unknown>;
   protected options: Options;
-  protected validatedFields: Record<string, unknown>;
+  protected validatedFields: T;
 
-  constructor(obj: T, options?: Options) {
+  constructor(obj: Record<string, unknown>, options?: Options) {
     SchemaMetadataStorage.storage.registerSchemaClass(this.constructor.name);
     this.initialData = obj;
-    this.validatedFields = {};
+    this.validatedFields = {} as T;
     this.options = options;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async validate(ctx: Context): Promise<void> {
+  async validate(ctx?: Context): Promise<void> {
     this.processValidation();
   }
 
@@ -42,8 +42,8 @@ export class Schema<T, Context = unknown> {
       (validatorProperty: string) => {
         const propertyConfiguration =
           validateClassMetadata.properties[validatorProperty];
-        const fromField = (propertyConfiguration.configuration.fromField ||
-          validatorProperty) as keyof T;
+        const fromField =
+          propertyConfiguration.configuration.fromField || validatorProperty;
 
         if (this.initialData[fromField] === undefined) {
           if (this.options.partialValidation) {
@@ -54,8 +54,8 @@ export class Schema<T, Context = unknown> {
 
         try {
           const attribute = this.initialData[fromField];
-          this.validatedFields[validatorProperty] =
-            propertyConfiguration.processor.validate(attribute);
+          this.validatedFields[validatorProperty as keyof T] =
+            propertyConfiguration.processor.validate(attribute) as T[keyof T];
         } catch ({ message }) {
           errors[validatorProperty] = [message as string];
         }
@@ -80,8 +80,7 @@ export class Schema<T, Context = unknown> {
       (validatorProperty: string) => {
         const validatorConfig =
           validateClassMetadata.nestedValidators[validatorProperty];
-        const fromField = (validatorConfig.fromField ||
-          validatorProperty) as keyof T;
+        const fromField = validatorConfig.fromField || validatorProperty;
 
         if (this.initialData[fromField] === undefined) {
           if (
@@ -93,7 +92,7 @@ export class Schema<T, Context = unknown> {
           errors[validatorProperty] = [`Missing field ${validatorProperty}`];
         }
 
-        const validator = new validatorConfig.validator(
+        const validator = new validatorConfig.schema(
           this.initialData[fromField],
           this.options
         );
@@ -105,7 +104,7 @@ export class Schema<T, Context = unknown> {
           return;
         }
 
-        this.validatedFields[validatorProperty] = validator.toData();
+        this.validatedFields[validatorProperty as keyof T] = validator.toData();
       }
     );
 
@@ -118,8 +117,6 @@ export class Schema<T, Context = unknown> {
     if (Object.keys(validationErrors).length !== 0) {
       throw new ValidationError(validationErrors);
     }
-
-    Object.assign(this, this.validatedFields);
   }
 
   toData(): T {
