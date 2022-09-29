@@ -21,6 +21,20 @@
     "type": "git",
     "url": "git+https://github.com/dataffy/schema-validation.git"
   },
+  "keywords": [
+    "validation",
+    "validate",
+    "validator",
+    "decorators",
+    "schema",
+    "sanitization",
+    "sanitize",
+    "sanitise",
+    "schema-validator",
+    "schema-validation",
+    "asert",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
