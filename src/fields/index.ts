@@ -2,6 +2,8 @@ import {
   EmailFieldConfig,
   EmailFieldProcessor,
   FieldConfig,
+  JsonFieldConfig,
+  JsonFieldProcessor,
 } from "../processors";
 import {
   BooleanFieldConfig,
@@ -77,6 +79,22 @@ export const BooleanField: ValidationField<BooleanFieldConfig> =
   (configuration?: DecoratorFieldConfig<BooleanFieldConfig>) =>
   (target: object, propertyKey: string): void => {
     registerField(target, propertyKey, configuration, BooleanFieldProcessor);
+  };
+
+/**
+ * Used to register the class property as a json field
+ * @param configuration
+ * @constructor
+ * @example
+ * export class UserSchema {
+ *   @JsonField()
+ *   metadata: JsonValue
+ * }
+ */
+export const JsonField: ValidationField<JsonFieldConfig> =
+  (configuration?: DecoratorFieldConfig<JsonFieldConfig>) =>
+  (target: object, propertyKey: string): void => {
+    registerField(target, propertyKey, configuration, JsonFieldProcessor);
   };
 
 /**
