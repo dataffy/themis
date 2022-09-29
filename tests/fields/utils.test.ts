@@ -11,7 +11,7 @@ describe("Fields Utils", () => {
       const schemaClass = SchemaMock;
       const propertyKey = "field";
       const configuration = {
-        validator: SchemaMock,
+        schema: SchemaMock,
       } as NestedFieldConfiguration<SchemaMock, unknown>;
 
       const addClassNestedValidatorDefinitionMock = jest

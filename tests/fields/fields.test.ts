@@ -110,7 +110,7 @@ describe("Fields", () => {
     const field = NestedField;
     const propertyKey = "field";
     const configuration = {
-      validator: SchemaMock,
+      schema: SchemaMock,
     } as NestedFieldConfiguration<SchemaMock, unknown>;
     const target = SchemaMock;
 

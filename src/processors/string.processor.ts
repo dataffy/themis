@@ -9,7 +9,7 @@ export type StringFieldConfig = FieldConfig<string> &
      */
     maxLength: number;
     /**
-     * THe min length allowed for the field
+     * The min length allowed for the field
      */
     minLength: number;
   }>;
