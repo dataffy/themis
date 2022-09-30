@@ -45,11 +45,8 @@ export class Schema<T, Context = unknown> {
         const fromField =
           propertyConfiguration.configuration.fromField || validatorProperty;
 
-        if (this.initialData[fromField] === undefined) {
-          if (this.options.partialValidation) {
-            return;
-          }
-          errors[validatorProperty] = [`Missing field ${validatorProperty}`];
+        if (this.options.partialValidation) {
+          return;
         }
 
         try {
