@@ -6,7 +6,7 @@ export type SchemaClass<
   T extends Schema<U>,
   U,
   O extends Options = Options
-> = new (obj: U, options?: O) => T;
+> = new (obj: Record<string, unknown>, options?: O) => T;
 
 export type ValidationErrors = { [key: string]: ValidationErrors | string[] };
 export type Options = {
@@ -91,9 +91,10 @@ export class Schema<T, Context = unknown> {
           }
           errors[validatorProperty] = [`Missing field ${validatorProperty}`];
         }
+        gi;
 
         const validator = new validatorConfig.schema(
-          this.initialData[fromField],
+          this.initialData[fromField] as Record<string, unknown>,
           this.options
         );
 

@@ -161,7 +161,7 @@ Generic Field Configurations:
 Each field can have extra field configurations.
 
 | Field             | Processor          | Configuration                                                                                                                     |
-|-------------------|--------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| ----------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
 | `@StringField()`  | `StringProcessor`  | <ul><li>`maxLength` - The max length allowed for the field </li> <li>`minLength` - The min length allowed for the field</li></ul> |
 | `@BooleanField()` | `BooleanProcessor` |                                                                                                                                   |
 | `@DateField()`    | `DateProcessor`    | <ul><li>`formats` - Array with the accepted string formats for the date </li></ul>                                                |
@@ -213,4 +213,3 @@ validator.validate(30);
 ## License
 
 Distributed under the ISC License. See `LICENSE` for more information.
-
