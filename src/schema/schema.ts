@@ -88,7 +88,6 @@ export class Schema<T, Context = unknown> {
           }
           errors[validatorProperty] = [`Missing field ${validatorProperty}`];
         }
-        gi;
 
         const validator = new validatorConfig.schema(
           this.initialData[fromField] as Record<string, unknown>,
