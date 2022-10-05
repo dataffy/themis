@@ -1,5 +1,5 @@
 import { Validator } from "../validators";
-import { ProcessorValidateError, ValidateError } from "../errors";
+import { ProcessorValidateError } from "../errors";
 
 export type FieldConfig<T = unknown> = Partial<{
   /**
@@ -90,9 +90,9 @@ export abstract class FieldProcessor<T extends FieldConfig<K>, U, K> {
    */
   private checkEmptyValues(data: U): boolean {
     if (data === undefined && !(this.configuration.required === false)) {
-      throw new ValidateError("Value is required");
+      throw new ProcessorValidateError(["Value is required"]);
     } else if (data === null && this.configuration.nullable === false) {
-      throw new ValidateError("Value cannot be null");
+      throw new ProcessorValidateError(["Value cannot be null"]);
     }
 
     return data === undefined || data === null;

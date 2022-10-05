@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { BooleanFieldProcessor } from "../../src/processors";
+import { ProcessorValidateError } from "../../src";
 
 describe("BooleanProcessor", () => {
   describe("toInternalValue method", () => {
@@ -84,7 +85,7 @@ describe("BooleanProcessor", () => {
 
       if (expectedError) {
         expect(() => processor.toInternalValue(value)).toThrowError(
-          "Not a valid boolean"
+          new ProcessorValidateError(["Not a valid boolean"])
         );
       } else {
         expect(processor.toInternalValue(value as number)).toEqual(

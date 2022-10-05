@@ -1,5 +1,5 @@
 import { FieldConfig, FieldProcessor } from "./field.processor";
-import { ValidateError } from "../errors";
+import { ProcessorValidateError } from "../errors";
 import { parse, parseISO } from "date-fns";
 
 export type DateFieldConfig = Partial<{
@@ -20,7 +20,7 @@ export class DateFieldProcessor extends FieldProcessor<
     }
 
     if (typeof data !== "string") {
-      throw new ValidateError("Not a valid date");
+      throw new ProcessorValidateError(["Not a valid date"]);
     }
 
     if (
@@ -42,16 +42,16 @@ export class DateFieldProcessor extends FieldProcessor<
       }
     }
 
-    throw new ValidateError(
-      `Date must have format ${this.configuration.formats.join(", ")}`
-    );
+    throw new ProcessorValidateError([
+      `Date must have format ${this.configuration.formats.join(", ")}`,
+    ]);
   }
 
   private parseIsoDate(value: string): Date {
     const date = parseISO(value);
 
     if (date instanceof Date && isNaN(date.valueOf())) {
-      throw new ValidateError("Date must have ISO 8601 format");
+      throw new ProcessorValidateError(["Date must have ISO 8601 format"]);
     }
 
     return date;

@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { IntegerFieldProcessor } from "../../src/processors";
 import { MaxValueValidator, MinValueValidator } from "../../src/validators";
 import { Validator } from "../../src/validators";
+import { ProcessorValidateError } from "../../src";
 
 describe("IntegerProcessor", () => {
   describe("toInternalValue method", () => {
@@ -36,7 +37,7 @@ describe("IntegerProcessor", () => {
 
       if (expectedError) {
         expect(() => processor.toInternalValue(value as number)).toThrowError(
-          processor.errorMessage
+          new ProcessorValidateError([processor.errorMessage])
         );
       } else {
         expect(processor.toInternalValue(value as number)).toEqual(value);

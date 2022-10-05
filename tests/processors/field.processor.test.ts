@@ -44,7 +44,9 @@ describe("FieldProcessor", () => {
         const processor = new ProcessorMock(config);
 
         if (expectedError) {
-          expect(() => processor.validate(value)).toThrowError(expectedError);
+          expect(() => processor.validate(value)).toThrowError(
+            new ProcessorValidateError([expectedError])
+          );
         } else {
           const result = processor.validate(value);
           expect(result).toEqual(expectedResult);

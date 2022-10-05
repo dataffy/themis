@@ -1,5 +1,5 @@
 import { FieldConfig, FieldProcessor } from "./field.processor";
-import { ValidateError } from "../errors";
+import { ProcessorValidateError } from "../errors";
 
 export type JsonFieldConfig = FieldConfig;
 
@@ -20,19 +20,19 @@ export class JsonFieldProcessor extends FieldProcessor<
 
   toInternalValue(data: Json): Json {
     if (typeof data === "bigint") {
-      throw new ValidateError(this.errorMessage);
+      throw new ProcessorValidateError([this.errorMessage]);
     }
 
     if (typeof data === "number") {
-      throw new ValidateError(this.errorMessage);
+      throw new ProcessorValidateError([this.errorMessage]);
     }
 
     if (typeof data === "boolean") {
-      throw new ValidateError(this.errorMessage);
+      throw new ProcessorValidateError([this.errorMessage]);
     }
 
     if (data instanceof Date) {
-      throw new ValidateError(this.errorMessage);
+      throw new ProcessorValidateError([this.errorMessage]);
     }
 
     try {
@@ -42,7 +42,7 @@ export class JsonFieldProcessor extends FieldProcessor<
         return JSON.parse(JSON.stringify(data)) as Json;
       }
     } catch {
-      throw new ValidateError(this.errorMessage);
+      throw new ProcessorValidateError([this.errorMessage]);
     }
   }
 

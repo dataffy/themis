@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { StringFieldProcessor } from "../../src/processors";
 import { MaxLengthValidator, MinLengthValidator } from "../../src/validators";
 import { Validator } from "../../src/validators";
+import { ProcessorValidateError } from "../../src";
 
 describe("StringProcessor", () => {
   describe("toInternalValue method", () => {
@@ -26,7 +27,7 @@ describe("StringProcessor", () => {
 
       if (expectedError) {
         expect(() => processor.toInternalValue(value as string)).toThrowError(
-          "Not a valid string"
+          new ProcessorValidateError(["Not a valid string"])
         );
       } else {
         expect(processor.toInternalValue(value as string)).toEqual(value);

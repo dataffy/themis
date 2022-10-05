@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Json, JsonFieldProcessor } from "../../src";
+import { Json, JsonFieldProcessor, ProcessorValidateError } from "../../src";
 
 describe("JsonProcessor", () => {
   describe("toInternalValue method", () => {
@@ -66,7 +66,7 @@ describe("JsonProcessor", () => {
       if (expectedError) {
         expect(() =>
           processor.toInternalValue(value as unknown as Json)
-        ).toThrowError(processor.errorMessage);
+        ).toThrowError(new ProcessorValidateError([processor.errorMessage]));
       } else if (parsingNeeded) {
         expect(processor.toInternalValue(value as unknown as Json)).toEqual(
           JSON.parse(value)

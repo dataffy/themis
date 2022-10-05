@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { DateFieldProcessor } from "../../src/processors";
 import { parse } from "date-fns";
+import { ProcessorValidateError } from "../../src";
 
 describe("DateProcessor", () => {
   describe("toInternalValue method", () => {
@@ -102,7 +103,7 @@ describe("DateProcessor", () => {
 
         if (expectedError) {
           expect(() => processor.toInternalValue(value as string)).toThrowError(
-            errorMessage
+            new ProcessorValidateError([errorMessage])
           );
         } else {
           expect(processor.toInternalValue(value as string)).toEqual(

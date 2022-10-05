@@ -1,5 +1,5 @@
 import { FieldConfig, FieldProcessor } from "./field.processor";
-import { ValidateError } from "../errors";
+import { ProcessorValidateError } from "../errors";
 import { MaxValueValidator, MinValueValidator } from "../validators";
 
 export type IntegerFieldConfig = FieldConfig &
@@ -17,7 +17,7 @@ export class IntegerFieldProcessor extends FieldProcessor<
 
   toInternalValue(data: number): number {
     if (!(typeof data === "number") || !Number.isInteger(data)) {
-      throw new ValidateError(this.errorMessage);
+      throw new ProcessorValidateError([this.errorMessage]);
     }
 
     return data;

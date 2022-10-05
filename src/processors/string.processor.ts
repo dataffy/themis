@@ -1,5 +1,5 @@
 import { FieldConfig, FieldProcessor } from "./field.processor";
-import { ValidateError } from "../errors";
+import { ProcessorValidateError } from "../errors";
 import { MaxLengthValidator, MinLengthValidator } from "../validators";
 
 export type StringFieldConfig = FieldConfig<string> &
@@ -19,7 +19,7 @@ export class StringFieldProcessor<
 > extends FieldProcessor<T, string, string> {
   toInternalValue(data: string): string {
     if (!(typeof data === "string")) {
-      throw new ValidateError("Not a valid string");
+      throw new ProcessorValidateError(["Not a valid string"]);
     }
 
     return data;
