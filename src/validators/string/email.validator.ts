@@ -11,7 +11,7 @@ export class EmailValidator extends Validator<string> {
 
   validate(value: string): void {
     if (!this.emailRegex.test(value)) {
-      throw new ValidateError("email is not of valid format");
+      throw new ValidateError("Email is not of valid format");
     }
   }
 }

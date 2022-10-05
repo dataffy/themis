@@ -1,5 +1,5 @@
 import { FieldConfig, FieldProcessor } from "./field.processor";
-import { ValidateError } from "../errors";
+import { ProcessorValidateError } from "../errors";
 
 export type BooleanFieldConfig = FieldConfig;
 
@@ -18,7 +18,7 @@ export class BooleanFieldProcessor extends FieldProcessor<
       return false;
     }
 
-    throw new ValidateError("Not a valid boolean");
+    throw new ProcessorValidateError(["Not a valid boolean"]);
   }
 
   initialiseValidators(): void {}

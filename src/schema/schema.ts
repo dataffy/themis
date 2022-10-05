@@ -1,6 +1,6 @@
 import { SchemaClassConfiguration, SchemaMetadataStorage } from "./storage";
 import { FieldConfig, FieldProcessor } from "../processors";
-import { ValidationError } from "../errors";
+import { ProcessorValidateError, ValidationError } from "../errors";
 
 export type SchemaClass<
   T extends Schema<U>,
@@ -53,8 +53,10 @@ export class Schema<T, Context = unknown> {
           const attribute = this.initialData[fromField];
           this.validatedFields[validatorProperty as keyof T] =
             propertyConfiguration.processor.validate(attribute) as T[keyof T];
-        } catch ({ message }) {
-          errors[validatorProperty] = [message as string];
+        } catch (error) {
+          if (error instanceof ProcessorValidateError) {
+            errors[validatorProperty] = error.messages;
+          }
         }
       }
     );
