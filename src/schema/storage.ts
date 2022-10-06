@@ -8,17 +8,20 @@ import {
 import { Schema } from "./schema";
 
 export type PropertyConfiguration<
-  T extends FieldProcessor<FieldConfig, unknown, unknown>
+  C extends FieldConfig,
+  T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
 > = {
-  processor: T;
+  processorClass: T;
+  fieldConfig: C;
   configuration: DecoratorConfig;
 };
 
 export type SchemaClassConfiguration<
-  T extends FieldProcessor<FieldConfig, unknown, unknown>
+  C extends FieldConfig,
+  T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
 > = {
   registered: boolean;
-  properties: { [propertyKey: string]: PropertyConfiguration<T> };
+  properties: { [propertyKey: string]: PropertyConfiguration<C, T> };
   nestedValidators: {
     [propertyKey: string]: NestedFieldConfiguration<Schema<any>, any>;
   };
@@ -33,7 +36,8 @@ export class SchemaMetadataStorage {
   private static instance: SchemaMetadataStorage;
   protected schemaClasses: {
     [schemaClassName: string]: SchemaClassConfiguration<
-      FieldProcessor<FieldConfig, unknown, unknown>
+      FieldConfig,
+      ProcessorClass<FieldProcessor<FieldConfig, unknown, unknown>>
     >;
   } = {};
 
@@ -95,7 +99,8 @@ export class SchemaMetadataStorage {
     const configs: Configs<C> = this.getDecoratorAndFieldConfig(configuration);
 
     this.schemaClasses[schemaClassName].properties[propertyKey] = {
-      processor: new processorClass(configs.fieldConfig || {}),
+      processorClass,
+      fieldConfig: configs.fieldConfig,
       configuration: configs.decoratorConfig || {},
     };
   }
@@ -132,7 +137,10 @@ export class SchemaMetadataStorage {
    */
   getSchemaClassMetadata(
     schemaClass: string
-  ): SchemaClassConfiguration<FieldProcessor<unknown, unknown, unknown>> {
+  ): SchemaClassConfiguration<
+    FieldConfig,
+    ProcessorClass<FieldProcessor<FieldConfig, unknown, unknown>>
+  > {
     return this.schemaClasses[schemaClass];
   }
 

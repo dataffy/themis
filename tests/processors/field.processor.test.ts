@@ -40,15 +40,15 @@ describe("FieldProcessor", () => {
       },
     ])(
       "Should check empty values and $testName",
-      ({ config, value, expectedError, expectedResult }) => {
+      async ({ config, value, expectedError, expectedResult }) => {
         const processor = new ProcessorMock(config);
 
         if (expectedError) {
-          expect(() => processor.validate(value)).toThrowError(
+          await expect(processor.validate(value)).rejects.toThrowError(
             new ProcessorValidateError([expectedError])
           );
         } else {
-          const result = processor.validate(value);
+          const result = await processor.validate(value);
           expect(result).toEqual(expectedResult);
         }
       }
@@ -67,7 +67,7 @@ describe("FieldProcessor", () => {
       },
     ])(
       "Should use internally the result when toInternalValue returns: $name",
-      ({ valueFn, value }) => {
+      async ({ valueFn, value }) => {
         const expectedResult = valueFn(value);
         const processor = new ProcessorMock({});
 
@@ -75,7 +75,7 @@ describe("FieldProcessor", () => {
           .spyOn(processor, "toInternalValue")
           .mockImplementationOnce(() => valueFn(value));
 
-        const validationResult = processor.validate(value);
+        const validationResult = await processor.validate(value);
 
         expect(validationResult).toEqual(expectedResult);
       }
@@ -97,7 +97,7 @@ describe("FieldProcessor", () => {
         validators: [new MinLengthValidator(3)],
         expectValidationError: false,
       },
-    ])("Should $testName", ({ validators, expectValidationError }) => {
+    ])("Should $testName", async ({ validators, expectValidationError }) => {
       const validator = new ValidatorMock();
       class DummyFieldProcessor extends FieldProcessor<
         FieldConfig,
@@ -125,17 +125,17 @@ describe("FieldProcessor", () => {
 
       if (expectValidationError) {
         try {
-          processor.validate(value);
+          await processor.validate(value);
           expect(true).toEqual(false);
         } catch (error) {
           expect(error).toBeInstanceOf(ProcessorValidateError);
           expect((error as ProcessorValidateError).messages.length).toEqual(1);
-          expect((error as ProcessorValidateError).messages[0]).toEqual(
-            expectValidationError
-          );
+          expect(
+            ((error as ProcessorValidateError).messages as string[])[0]
+          ).toEqual(expectValidationError);
         }
       } else {
-        const validationResult = processor.validate(value);
+        const validationResult = await processor.validate(value);
         expect(validationResult).toEqual(value);
         expect(
           (

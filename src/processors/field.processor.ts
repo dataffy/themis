@@ -20,13 +20,22 @@ export type ProcessorClass<
   T extends FieldProcessor<C, U, K>,
   C extends FieldConfig<K> = FieldConfig,
   U = unknown,
-  K = unknown
-> = new (configuration: C) => T;
+  K = unknown,
+  Context = unknown
+> = new (configuration: C, context?: Context) => T;
 
-export abstract class FieldProcessor<T extends FieldConfig<K>, U, K> {
+export abstract class FieldProcessor<
+  T extends FieldConfig<K>,
+  U,
+  K,
+  Context = unknown
+> {
   protected validators: Validator<K>[] = [];
 
-  constructor(protected readonly configuration: T) {
+  constructor(
+    protected readonly configuration: T,
+    protected readonly context?: Context
+  ) {
     if (this.configuration.validators) {
       this.validators = [...this.configuration.validators];
     }
@@ -45,14 +54,14 @@ export abstract class FieldProcessor<T extends FieldConfig<K>, U, K> {
    */
   abstract initialiseValidators(): void;
 
-  validate(data: U): K {
+  async validate(data: U): Promise<K> {
     const isEmpty = this.checkEmptyValues(data);
 
     if (isEmpty) {
       return data as undefined | null;
     }
 
-    const value = this.toInternalValue(data);
+    const value = await this.toInternalValue(data);
 
     this.runValidators(value);
 
