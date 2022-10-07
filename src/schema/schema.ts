@@ -53,7 +53,7 @@ export class Schema<T, Context = unknown> {
       const fromField =
         propertyConfiguration.configuration.fromField || validatorProperty;
 
-      if (this.options.partialValidation) {
+      if (this.options?.partialValidation) {
         return;
       }
 
@@ -96,7 +96,7 @@ export class Schema<T, Context = unknown> {
 
       if (this.initialData[fromField] === undefined) {
         if (
-          this.options.partialValidation ||
+          this.options?.partialValidation ||
           validatorConfig.required === false
         ) {
           return;

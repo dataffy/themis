@@ -1,4 +1,5 @@
 import {
+  ArrayField,
   BooleanField,
   DateField,
   FloatField,
@@ -11,6 +12,7 @@ import {
 import * as fieldsUtils from "../../src/fields/utils";
 import { SchemaMock } from "../schemas/mocks/schema.mock";
 import {
+  ArrayFieldProcessor,
   BooleanFieldConfig,
   BooleanFieldProcessor,
   FloatFieldConfig,
@@ -84,6 +86,14 @@ describe("Fields", () => {
         nullable: true,
       } as JsonFieldConfig,
       processor: JsonFieldProcessor,
+    },
+    {
+      fieldName: "ArrayField",
+      field: ArrayField,
+      configuration: {
+        child: StringFieldProcessor,
+      },
+      processor: ArrayFieldProcessor,
     },
   ])(
     "Should register field successfully for $fieldName",
