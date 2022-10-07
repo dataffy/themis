@@ -9,16 +9,16 @@ import { Schema } from "./schema";
 
 export type PropertyConfiguration<
   C extends FieldConfig,
-  T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
+  T extends ProcessorClass<FieldProcessor<C, unknown, unknown>, C>
 > = {
-  processorClass: T;
+  processorClass: any;
   fieldConfig: C;
   configuration: DecoratorConfig;
 };
 
 export type SchemaClassConfiguration<
   C extends FieldConfig,
-  T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
+  T extends ProcessorClass<FieldProcessor<C, unknown, unknown>, C>
 > = {
   registered: boolean;
   properties: { [propertyKey: string]: PropertyConfiguration<C, T> };
@@ -27,7 +27,7 @@ export type SchemaClassConfiguration<
   };
 };
 
-type Configs<T> = {
+type Configs<T extends FieldConfig> = {
   fieldConfig: T;
   decoratorConfig: DecoratorConfig;
 };
@@ -81,7 +81,7 @@ export class SchemaMetadataStorage {
    */
   addSchemaDefinition<
     C extends FieldConfig,
-    T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
+    T extends ProcessorClass<FieldProcessor<C, unknown, unknown>, C>
   >(
     schemaClassName: string,
     propertyKey: string,

@@ -104,7 +104,7 @@ describe("Fields", () => {
         .spyOn(fieldsUtils, "registerField")
         .mockImplementationOnce(() => {});
 
-      field(configuration)(target, propertyKey);
+      field(configuration as any)(target, propertyKey);
 
       expect(registerFieldMock).toBeCalledTimes(1);
 

@@ -3,7 +3,7 @@ import { FieldConfig, FieldProcessor, ProcessorClass } from "../processors";
 import { ProcessorValidateError, ValidationError } from "../errors";
 
 export type SchemaClass<
-  T extends Schema<U>,
+  T extends Schema<U, Context>,
   U,
   O extends Options = Options,
   Context = unknown

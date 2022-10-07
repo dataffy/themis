@@ -1,5 +1,5 @@
 import { FieldConfig, FieldProcessor, ProcessorClass } from "./field.processor";
-import { Schema, SchemaClass } from "../schema";
+import { Options, Schema, SchemaClass } from "../schema";
 import {
   ProcessorErrorMessages,
   ProcessorValidateError,
@@ -14,30 +14,42 @@ export type ArrayFieldType<
 
 export type ArrayChildType<
   C extends FieldConfig = FieldConfig,
-  Payload = unknown
-> = ArrayFieldType<C> | SchemaClass<Schema<Payload>, Payload>;
+  Payload = unknown,
+  Context = unknown,
+  O extends Options = Options
+> =
+  | ArrayFieldType<C>
+  | SchemaClass<Schema<Payload, Context>, Payload, O, Context>;
 
-export type ArrayFieldConfig<T extends FieldConfig> = FieldConfig &
-  Partial<{
-    /**
-     * The processor or schema used for validating the array values
-     */
-    child: ArrayChildType<T>;
-    /**
-     * The configuration for the processor
-     */
-    childConfig: T;
-  }>;
+export type ArrayFieldConfig<
+  T extends FieldConfig,
+  Payload = unknown,
+  Context = any
+> = FieldConfig & {
+  /**
+   * The processor or schema used for validating the array values
+   */
+  child: ArrayChildType<T, Payload, Context>;
+  /**
+   * The configuration for the processor
+   */
+  childConfig?: T;
+};
 
 export class ArrayFieldProcessor<
   T,
   K = unknown,
   U = unknown,
   Context = unknown
-> extends FieldProcessor<ArrayFieldConfig<T>, K[], Promise<U[]>> {
+> extends FieldProcessor<
+  ArrayFieldConfig<T, unknown, Context>,
+  K[],
+  Promise<U[]>,
+  Context
+> {
   initialiseValidators(): void {}
 
-  async toInternalValue(data: K[], context?: Context): Promise<U[]> {
+  async toInternalValue(data: K[]): Promise<U[]> {
     if (!(data instanceof Array)) {
       throw new ProcessorValidateError(["Not a valid array"]);
     }
@@ -47,7 +59,7 @@ export class ArrayFieldProcessor<
     if (childType.name === FieldProcessor.name) {
       return await this.processorToInternalValue(data);
     } else if (childType.name === Schema.name) {
-      return await this.schemaToInternalValue(data, context);
+      return await this.schemaToInternalValue(data);
     }
   }
 
@@ -55,7 +67,10 @@ export class ArrayFieldProcessor<
     const processorClass = this.configuration.child as ProcessorClass<
       FieldProcessor<T, K, U>
     >;
-    const processor = new processorClass(this.configuration.childConfig || {});
+    const processor = new processorClass(
+      this.configuration.childConfig || {},
+      this.context
+    );
     const errors: Record<string, ProcessorErrorMessages> = {};
     const processedData: U[] = [];
 
@@ -79,18 +94,20 @@ export class ArrayFieldProcessor<
     return processedData;
   }
 
-  private async schemaToInternalValue(
-    data: K[],
-    context: Context
-  ): Promise<U[]> {
-    const schemaClass = this.configuration.child as SchemaClass<Schema<U>, U>;
+  private async schemaToInternalValue(data: K[]): Promise<U[]> {
+    const schemaClass = this.configuration.child as SchemaClass<
+      Schema<U, Context>,
+      U,
+      Options,
+      Context
+    >;
     const errors: Record<string, ProcessorErrorMessages> = {};
     const processedData: U[] = [];
 
     for (let index = 0; index < data.length; index++) {
       const schema = new schemaClass(
         data[index] as Record<string, unknown>,
-        context
+        this.context
       );
 
       try {
@@ -112,7 +129,9 @@ export class ArrayFieldProcessor<
     return processedData;
   }
 
-  private getBaseClass(child: ArrayChildType<T>): ArrayChildType<T> {
+  private getBaseClass(
+    child: ArrayChildType<T, unknown, Context>
+  ): ArrayChildType<T, unknown, Context> {
     const baseClass = Object.getPrototypeOf(child);
 
     if (baseClass && baseClass.name) {

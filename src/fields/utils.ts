@@ -38,7 +38,8 @@ export const registerNestedSchemaField = <U extends Schema<K>, K>(
  */
 export const registerField = <
   C extends FieldConfig,
-  T extends ProcessorClass<FieldProcessor<C, unknown, unknown>>
+  T extends ProcessorClass<FieldProcessor<C, unknown, unknown, Context>, C>,
+  Context = unknown
 >(
   schemaClass: object,
   propertyKey: string,
