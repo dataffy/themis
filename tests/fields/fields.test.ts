@@ -1,4 +1,5 @@
 import {
+  ArrayField,
   BooleanField,
   DateField,
   FloatField,
@@ -11,6 +12,7 @@ import {
 import * as fieldsUtils from "../../src/fields/utils";
 import { SchemaMock } from "../schemas/mocks/schema.mock";
 import {
+  ArrayFieldProcessor,
   BooleanFieldConfig,
   BooleanFieldProcessor,
   FloatFieldConfig,
@@ -85,6 +87,14 @@ describe("Fields", () => {
       } as JsonFieldConfig,
       processor: JsonFieldProcessor,
     },
+    {
+      fieldName: "ArrayField",
+      field: ArrayField,
+      configuration: {
+        child: StringFieldProcessor,
+      },
+      processor: ArrayFieldProcessor,
+    },
   ])(
     "Should register field successfully for $fieldName",
     ({ field, configuration, processor }) => {
@@ -94,7 +104,7 @@ describe("Fields", () => {
         .spyOn(fieldsUtils, "registerField")
         .mockImplementationOnce(() => {});
 
-      field(configuration)(target, propertyKey);
+      field(configuration as any)(target, propertyKey);
 
       expect(registerFieldMock).toBeCalledTimes(1);
 

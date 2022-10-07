@@ -160,15 +160,16 @@ Generic Field Configurations:
 
 Each field can have extra field configurations.
 
-| Field             | Processor          | Configuration                                                                                                                     |
-| ----------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| `@StringField()`  | `StringProcessor`  | <ul><li>`maxLength` - The max length allowed for the field </li> <li>`minLength` - The min length allowed for the field</li></ul> |
-| `@BooleanField()` | `BooleanProcessor` |                                                                                                                                   |
-| `@DateField()`    | `DateProcessor`    | <ul><li>`formats` - Array with the accepted string formats for the date </li></ul>                                                |
-| `@IntegerField()` | `IntegerProcessor` | <ul><li>`maxValue` - The max value allowed for the field </li> <li>`minValue` - The min value allowed for the field</li></ul>     |
-| `@FloatField()`   | `FloatProcessor`   | <ul><li>`maxValue` - The max value allowed for the field </li> <li>`minValue` - The min value allowed for the field</li></ul>     |
-| `@EmailField()`   | `EmailProcessor`   |                                                                                                                                   |
-| `@JsonField()`    | `JsonProcessor`    |                                                                                                                                   |
+| Field             | Processor               | Configuration                                                                                                                                                                                                   |
+| ----------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@StringField()`  | `StringFieldProcessor`  | <ul><li>`maxLength` - The max length allowed for the field </li> <li>`minLength` - The min length allowed for the field</li></ul>                                                                               |
+| `@BooleanField()` | `BooleanFieldProcessor` |                                                                                                                                                                                                                 |
+| `@DateField()`    | `DateFieldProcessor`    | <ul><li>`formats` - Array with the accepted string formats for the date </li></ul>                                                                                                                              |
+| `@IntegerField()` | `IntegerFieldProcessor` | <ul><li>`maxValue` - The max value allowed for the field </li> <li>`minValue` - The min value allowed for the field</li></ul>                                                                                   |
+| `@FloatField()`   | `FloatFieldProcessor`   | <ul><li>`maxValue` - The max value allowed for the field </li> <li>`minValue` - The min value allowed for the field</li></ul>                                                                                   |
+| `@EmailField()`   | `EmailFieldProcessor`   |                                                                                                                                                                                                                 |
+| `@JsonField()`    | `JsonFieldProcessor`    |                                                                                                                                                                                                                 |
+| `@ArrayField()`   | `ArrayFieldProcessor`   | <ul><li>`child` - The type of values the array has. It can be a Schema class or Processor class </li> <li>`childConfig` - Used to specify the config for the child, if the child is a processor class</li></ul> |
 
 Creating a custom processor:
 

@@ -32,7 +32,7 @@
     "sanitise",
     "schema-validator",
     "schema-validation",
-    "asert",
+    "assert",
     "typescript"
   ],
   "author": "",

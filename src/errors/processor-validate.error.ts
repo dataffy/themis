@@ -1,7 +1,13 @@
-export class ProcessorValidateError extends Error {
-  messages: string[];
+import { ValidationErrors } from "../schema";
 
-  constructor(messages: string[]) {
+export type ProcessorErrorMessages =
+  | string[]
+  | { [key: string]: string[] | ValidationErrors | ProcessorErrorMessages };
+
+export class ProcessorValidateError extends Error {
+  messages: ProcessorErrorMessages;
+
+  constructor(messages: ProcessorErrorMessages) {
     super();
     this.messages = messages;
   }

@@ -6,3 +6,4 @@ export * from "./integer.processor";
 export * from "./email.processor";
 export * from "./date.processor";
 export * from "./json.processor";
+export * from "./array.processor";

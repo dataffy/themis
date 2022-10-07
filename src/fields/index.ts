@@ -18,6 +18,10 @@ import {
 import { registerField, registerNestedSchemaField } from "./utils";
 import { Schema, SchemaClass } from "../schema";
 import { DateFieldConfig, DateFieldProcessor } from "../processors";
+import {
+  ArrayFieldConfig,
+  ArrayFieldProcessor,
+} from "../processors/array.processor";
 
 export * from "./utils";
 
@@ -143,6 +147,14 @@ export const EmailField: ValidationField<EmailFieldConfig> =
   (configuration?: DecoratorFieldConfig<EmailFieldConfig>) =>
   (target: object, propertyKey: string): void => {
     registerField(target, propertyKey, configuration, EmailFieldProcessor);
+  };
+
+export const ArrayField =
+  <T extends FieldConfig>(
+    configuration: DecoratorFieldConfig<ArrayFieldConfig<T>>
+  ) =>
+  (target: object, propertyKey: string): void => {
+    registerField(target, propertyKey, configuration, ArrayFieldProcessor<T>);
   };
 
 export type NestedFieldConfiguration<T extends Schema<U>, U> = {

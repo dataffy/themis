@@ -72,7 +72,8 @@ describe("SchemaMetadataStorage", () => {
       expect(schemaClassMetadata.registered).toEqual(false);
       expect(schemaClassMetadata.properties).toEqual({
         [propertyKey]: {
-          processor: new ProcessorMock(fieldConfig),
+          processorClass: ProcessorMock,
+          fieldConfig: fieldConfig,
           configuration: decoratorConfig,
         },
       });
