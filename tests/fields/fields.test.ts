@@ -2,6 +2,7 @@ import {
   ArrayField,
   BooleanField,
   DateField,
+  EnumField,
   FloatField,
   IntegerField,
   JsonField,
@@ -28,6 +29,8 @@ import { DateFieldConfig, DateFieldProcessor } from "../../src/processors";
 import { faker } from "@faker-js/faker";
 import { EmailFieldConfig, EmailFieldProcessor } from "../../src/processors";
 import { EmailField } from "../../src/fields";
+import { EnumFieldProcessor } from "../../src/processors/enum.processor";
+import { EnumMock } from "./mock/enum.mock";
 
 describe("Fields", () => {
   it.each([
@@ -94,6 +97,14 @@ describe("Fields", () => {
         child: StringFieldProcessor,
       },
       processor: ArrayFieldProcessor,
+    },
+    {
+      fieldName: "EnumField",
+      field: EnumField,
+      configuration: {
+        enum: EnumMock,
+      },
+      processor: EnumFieldProcessor,
     },
   ])(
     "Should register field successfully for $fieldName",

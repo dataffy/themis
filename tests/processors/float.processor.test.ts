@@ -19,7 +19,7 @@ describe("FloatProcessor", () => {
       },
       {
         testName: "return the number when value is an integer number",
-        value: faker.datatype.number(),
+        value: faker.datatype.number({ precision: 1 }),
         expectedError: false,
       },
       {
@@ -33,8 +33,8 @@ describe("FloatProcessor", () => {
         expectedError: false,
       },
       {
-        testName: "return the float number when the value is float",
-        value: 1.0,
+        testName: "return the integer number when value is integer",
+        value: `${faker.datatype.number()}`,
         expectedError: false,
       },
     ])("Should $testName", ({ value, expectedError }) => {

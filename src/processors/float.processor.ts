@@ -16,7 +16,11 @@ export class FloatFieldProcessor extends FieldProcessor<
   errorMessage = "Not a valid float number";
 
   toInternalValue(data: number): number {
-    if (!(typeof data === "number")) {
+    if (!(typeof data === "number") && !(typeof data === "string")) {
+      throw new ProcessorValidateError([this.errorMessage]);
+    }
+
+    if (Number.isNaN(+data)) {
       throw new ProcessorValidateError([this.errorMessage]);
     }
 

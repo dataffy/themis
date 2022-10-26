@@ -22,6 +22,10 @@ import {
   ArrayFieldConfig,
   ArrayFieldProcessor,
 } from "../processors/array.processor";
+import {
+  EnumFieldConfig,
+  EnumFieldProcessor,
+} from "../processors/enum.processor";
 
 export * from "./utils";
 
@@ -171,4 +175,21 @@ export const NestedField =
   <U extends Schema<K>, K>(configuration: NestedFieldConfiguration<U, K>) =>
   (target: object, propertyKey: string): void => {
     registerNestedSchemaField(target, propertyKey, configuration);
+  };
+
+/**
+ * Used to register the class property as an enum field
+ * @param configuration
+ * @constructor
+ * @example
+ * export class UserSchema {
+ *   @EnumField({enum: Status}})
+ *   status: Status
+ * }
+ */
+
+export const EnumField: ValidationField<EnumFieldConfig> =
+  (configuration?: DecoratorFieldConfig<EnumFieldConfig>) =>
+  (target: object, propertyKey: string): void => {
+    registerField(target, propertyKey, configuration, EnumFieldProcessor);
   };
