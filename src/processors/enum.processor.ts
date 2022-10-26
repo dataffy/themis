@@ -21,7 +21,7 @@ export class EnumFieldProcessor<T extends EnumAbstract> extends FieldProcessor<
 > {
   toInternalValue(data: unknown): T[keyof T] {
     if (typeof data !== "string" && typeof data !== "number") {
-      throw new ProcessorValidateError(["Not a valid date"]);
+      throw new ProcessorValidateError(["Not a valid enum value"]);
     }
 
     if (!Object.values(this.configuration.enum).includes(data)) {
