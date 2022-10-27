@@ -33,8 +33,13 @@ describe("FloatProcessor", () => {
         expectedError: false,
       },
       {
-        testName: "return the integer number when value is integer",
+        testName: "return the integer number when value is string",
         value: `${faker.datatype.number()}`,
+        expectedError: false,
+      },
+      {
+        testName: "return the float number when value is string",
+        value: `${faker.datatype.number({ precision: 0.01 })}`,
         expectedError: false,
       },
     ])("Should $testName", ({ value, expectedError }) => {
@@ -45,7 +50,7 @@ describe("FloatProcessor", () => {
           new ProcessorValidateError([processor.errorMessage])
         );
       } else {
-        expect(processor.toInternalValue(value as number)).toEqual(value);
+        expect(processor.toInternalValue(value as number)).toEqual(+value);
       }
     });
   });

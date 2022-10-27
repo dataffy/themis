@@ -24,7 +24,7 @@ export class FloatFieldProcessor extends FieldProcessor<
       throw new ProcessorValidateError([this.errorMessage]);
     }
 
-    return data;
+    return +data;
   }
 
   initialiseValidators(): void {
