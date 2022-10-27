@@ -46,7 +46,7 @@ describe("IntegerProcessor", () => {
           new ProcessorValidateError([processor.errorMessage])
         );
       } else {
-        expect(processor.toInternalValue(value as number)).toEqual(value);
+        expect(processor.toInternalValue(value as number)).toEqual(+value);
       }
     });
   });
