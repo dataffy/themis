@@ -7,7 +7,7 @@ export type JsonObject = {
   [key: string]: JsonArray | Json | string | number | boolean;
 };
 
-export type JsonArray = Json[];
+export type JsonArray = Json[] | string[] | number[] | boolean[];
 
 export type Json = JsonObject | JsonArray;
 

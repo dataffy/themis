@@ -16,7 +16,11 @@ export class IntegerFieldProcessor extends FieldProcessor<
   errorMessage = "Not a valid integer number";
 
   toInternalValue(data: number): number {
-    if (!(typeof data === "number") || !Number.isInteger(data)) {
+    if (!(typeof data === "number") && !(typeof data === "string")) {
+      throw new ProcessorValidateError([this.errorMessage]);
+    }
+
+    if (!Number.isInteger(+data)) {
       throw new ProcessorValidateError([this.errorMessage]);
     }
 

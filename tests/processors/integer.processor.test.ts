@@ -32,6 +32,12 @@ describe("IntegerProcessor", () => {
         value: faker.datatype.number(),
         expectedError: false,
       },
+      {
+        testName:
+          "return the integer number when value is integer but of string format",
+        value: `${faker.datatype.number({ precision: 11 })}`,
+        expectedError: false,
+      },
     ])("Should $testName", ({ value, expectedError }) => {
       const processor = new IntegerFieldProcessor({});
 
