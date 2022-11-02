@@ -96,29 +96,29 @@ export class Schema<T, Context = unknown> {
 
       if (this.initialData[fromField] === undefined) {
         if (
-          this.options?.partialValidation ||
-          validatorConfig.required === false
+          !this.options?.partialValidation &&
+          validatorConfig.required === true
         ) {
-          return;
+          errors[validatorProperty] = [`Missing field ${validatorProperty}`];
         }
-        errors[validatorProperty] = [`Missing field ${validatorProperty}`];
+        continue;
       }
 
       const validator = new validatorConfig.schema(
         this.initialData[fromField] as Record<string, unknown>,
+        this.context,
         this.options
       );
 
       const validatorErrors = await validator.validateFields();
 
-      if (Object.keys(errors).length !== 0) {
+      if (Object.keys(validatorErrors).length !== 0) {
         errors[validatorProperty] = validatorErrors;
-        return;
+        continue;
       }
 
       this.validatedFields[validatorProperty as keyof T] = validator.toData();
     }
-
     return errors;
   }
 
