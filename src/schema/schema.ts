@@ -53,10 +53,6 @@ export class Schema<T, Context = unknown> {
       const fromField =
         propertyConfiguration.configuration.fromField || validatorProperty;
 
-      if (this.options?.partialValidation) {
-        return;
-      }
-
       try {
         const attribute = this.initialData[fromField];
         const processor = new propertyConfiguration.processorClass(
@@ -66,11 +62,15 @@ export class Schema<T, Context = unknown> {
         this.validatedFields[validatorProperty as keyof T] =
           (await processor.validate(attribute)) as T[keyof T];
       } catch (error) {
-        if (error instanceof ProcessorValidateError) {
+        if (
+          error instanceof ProcessorValidateError &&
+          !this.options?.partialValidation
+        ) {
           errors[validatorProperty] = error.messages;
         }
       }
     }
+
     const nestedErrors = await this.nestedFields(validateClassMetadata);
 
     return {
@@ -96,29 +96,29 @@ export class Schema<T, Context = unknown> {
 
       if (this.initialData[fromField] === undefined) {
         if (
-          this.options?.partialValidation ||
-          validatorConfig.required === false
+          !this.options?.partialValidation &&
+          validatorConfig.required === true
         ) {
-          return;
+          errors[validatorProperty] = [`Missing field ${validatorProperty}`];
         }
-        errors[validatorProperty] = [`Missing field ${validatorProperty}`];
+        continue;
       }
 
       const validator = new validatorConfig.schema(
         this.initialData[fromField] as Record<string, unknown>,
+        this.context,
         this.options
       );
 
       const validatorErrors = await validator.validateFields();
 
-      if (Object.keys(errors).length !== 0) {
+      if (Object.keys(validatorErrors).length !== 0) {
         errors[validatorProperty] = validatorErrors;
-        return;
+        continue;
       }
 
       this.validatedFields[validatorProperty as keyof T] = validator.toData();
     }
-
     return errors;
   }
 
