@@ -53,10 +53,6 @@ export class Schema<T, Context = unknown> {
       const fromField =
         propertyConfiguration.configuration.fromField || validatorProperty;
 
-      if (this.options?.partialValidation) {
-        return;
-      }
-
       try {
         const attribute = this.initialData[fromField];
         const processor = new propertyConfiguration.processorClass(
@@ -66,11 +62,15 @@ export class Schema<T, Context = unknown> {
         this.validatedFields[validatorProperty as keyof T] =
           (await processor.validate(attribute)) as T[keyof T];
       } catch (error) {
-        if (error instanceof ProcessorValidateError) {
+        if (
+          error instanceof ProcessorValidateError &&
+          !this.options?.partialValidation
+        ) {
           errors[validatorProperty] = error.messages;
         }
       }
     }
+
     const nestedErrors = await this.nestedFields(validateClassMetadata);
 
     return {
