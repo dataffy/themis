@@ -127,8 +127,6 @@ export class Schema<T, Context = unknown> {
         continue;
       }
 
-      await validator.validate();
-
       this.validatedFields[validatorProperty as keyof T] = validator.toData();
     }
     return errors;
