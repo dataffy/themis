@@ -18,6 +18,13 @@ export class SimpleSchema extends Schema<SimplePayload> {
 
   @BooleanField()
   active: boolean;
+
+  async validate(): Promise<void> {
+    await super.validate();
+    await this.validateFunc();
+  }
+
+  async validateFunc(): Promise<void> {}
 }
 
 export type NestedPayload = {

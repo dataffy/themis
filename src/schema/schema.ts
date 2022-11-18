@@ -110,12 +110,24 @@ export class Schema<T, Context = unknown> {
         this.options
       );
 
-      const validatorErrors = await validator.validateFields();
+      let validatorErrors: ValidationErrors = {};
+
+      try {
+        await validator.validate();
+      } catch (e) {
+        if (e instanceof ValidationError) {
+          validatorErrors = e.errors;
+        } else {
+          throw e;
+        }
+      }
 
       if (Object.keys(validatorErrors).length !== 0) {
         errors[validatorProperty] = validatorErrors;
         continue;
       }
+
+      await validator.validate();
 
       this.validatedFields[validatorProperty as keyof T] = validator.toData();
     }
